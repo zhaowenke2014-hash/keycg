@@ -46,7 +46,6 @@
 
         .main-container { padding: 0 60px 20px 60px; flex: 1; }
 
-        /* 板块整体的淡入动画 */
         .tab-content { display: none; animation: fadeInTab 0.4s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -56,9 +55,7 @@
             margin: 20px 0 30px 0; text-transform: uppercase;
         }
 
-        /* ==================================================== */
-        /* ★ WORK 画廊网格与依次入场动画 ★ */
-        /* ==================================================== */
+        /* WORK 画廊与依次入场动画 */
         .work-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -67,12 +64,10 @@
 
         .grid-item {
             position: relative; background-color: #222222; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer;
-            /* 默认隐藏，等待 JS 赋予动画类 */
             opacity: 0; 
             transform: translateY(20px);
         }
 
-        /* 被 JS 赋予这个类之后，才会开始动画 */
         .grid-item.animate-in {
             animation: slideUpFade 0.6s ease forwards;
         }
@@ -145,15 +140,40 @@
         .info-section {
             display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 80px; padding-bottom: 40px;
         }
-        .slogan-box { max-width: 800px; margin-bottom: 40px; } 
+        .slogan-box { max-width: 800px; margin-bottom: 30px; } 
+
         .slogan-en { 
-            font-family: 'Georgia', 'Times New Roman', serif; font-style: italic; font-size: 34px; font-weight: 400; line-height: 1.4; margin-bottom: 20px; color: var(--text-main); 
+            font-family: 'Georgia', 'Times New Roman', serif; 
+            font-style: italic; 
+            font-size: 34px; 
+            font-weight: 400; 
+            line-height: 1.4; 
+            margin-bottom: 20px; 
+            color: var(--text-main); 
         }
-        .slogan-cn { font-size: 15px; color: var(--text-muted); letter-spacing: 2px; }
+        .slogan-cn { font-size: 15px; color: var(--text-muted); letter-spacing: 2px; margin-top: 10px;}
         
         .info-image-box { margin-bottom: 50px; width: 100%; display: flex; justify-content: center; }
-        .info-hero-image { max-width: 320px; width: 100%; height: auto; opacity: 0.85; transition: opacity 0.4s ease; border-radius: 2px; }
-        .info-hero-image:hover { opacity: 1; }
+
+        .info-hero-image { 
+            max-width: 320px; 
+            width: 100%; 
+            height: auto; 
+            opacity: 0; 
+            transition: opacity 0.4s ease; 
+            border-radius: 2px; 
+        }
+
+        .tab-content.active .info-hero-image {
+            animation: fadeInImage 3s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInImage {
+            to { opacity: 0.85; }
+        }
+
+        .info-hero-image:hover { opacity: 1 !important; }
 
         .contact-box { font-size: 14px; line-height: 2.5; color: var(--text-muted); letter-spacing: 1px; }
         .contact-box a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: color 0.3s; margin: 0 5px; }
@@ -196,16 +216,16 @@
     <header>
         <div class="logo"><span style="color: var(--accent);">KEYCG 赵文科</span> | DIRECTOR / CREATOR</div>
         <div class="nav-links">
-            <a onclick="switchTab('work')" id="tab-work" class="active">WORK</a>
+            <a onclick="switchTab('work')" id="tab-work">WORK</a>
             <a onclick="switchTab('tools')" id="tab-tools">TOOLS</a>
             <a onclick="switchTab('rd')" id="tab-rd">R&D</a>
-            <a onclick="switchTab('info')" id="tab-info">INFO</a>
+            <a onclick="switchTab('info')" id="tab-info" class="active">INFO</a>
         </div>
     </header>
 
     <div class="main-container">
         
-        <div id="work" class="tab-content active">
+        <div id="work" class="tab-content">
             <div class="section-divider">Selected Work (Motion & Stills)</div>
             <div class="work-grid" id="gallery-grid">
                 
@@ -251,7 +271,6 @@
         <div id="tools" class="tab-content">
             <div class="section-divider">Tools & Scripts</div>
             <div class="tool-grid">
-                
                 <div class="tool-box">
                     <div>
                         <h3 class="tool-title">视频剪辑文件夹项目生成器</h3>
@@ -271,13 +290,11 @@
                     </div>
                     <a href="https://zhaowenke2014-hash.github.io/subtitle-generator/" target="_blank" class="btn-skeuomorphic">访问在线工具</a>
                 </div>
-
             </div>
         </div>
 
         <div id="rd" class="tab-content">
             <div class="section-divider">Hardware Log & Workshop</div>
-
             <div class="terminal-window">
                 <div class="terminal-header">
                     <div class="dots-container">
@@ -290,22 +307,18 @@
                     <span class="term-comment"># WORKSTATION STATUS LOG</span><br><br>
                     <span class="term-highlight">root@keycg:~$</span> check_thermal<br>
                     [WARN] Thermal High. 水冷管发热中。<br><br>
-                    
                     <span class="term-highlight">root@keycg:~$</span> check_storage<br>
                     [ OK ] 硬盘冗余数据清理完毕。<br><br>
-                    
                     <span class="term-highlight">root@keycg:~$</span> check_memory<br>
                     <span style="color: #ff9e64;">[TODO]</span> 进 BIOS 开启 XMP。<br><br>
-
                     <span class="term-highlight">root@nas:~$</span> ping synology.local<br>
                     [ OK ] Web Service Online.<br><br>
-
                     <span class="term-highlight">root@keycg:~$</span> <span class="terminal-cursor"></span>
                 </div>
             </div>
         </div>
 
-        <div id="info" class="tab-content">
+        <div id="info" class="tab-content active">
             <div class="info-section">
                 <div class="slogan-box">
                     <div class="slogan-en">"Life is suffering. Yet he picked up his broken oar and set off again."</div>
@@ -317,8 +330,8 @@
                 </div>
                 
                 <div class="contact-box">
-                    <div>EMAIL / <a href="mailto:zhaowenke2014@QQ.com">zhaowenke2014@QQ.com</a></div>
-                    <div>关键帧KEYCG / <a href="https://space.bilibili.com/12201162" target="_blank" style="color: var(--accent);">BILIBILI</a> / <a href="https://www.xinpianchang.com/u12960270" target="_blank" style="color: var(--accent);">新片场</a> / <a href="https://www.behance.net/279117366bce9" target="_blank" style="color: var(--accent);">BEHANCE</a></div>
+                    <div>EMAIL / <a href="mailto:ZhaoWenke2014@qq.com">ZhaoWenke2014@qq.com</a></div>
+                    <div>关键帧KEYCG / <a href="https://space.bilibili.com/12201162" target="_blank" style="color: var(--accent);">BILIBILI</a> / <a href="https://www.xinpianchang.com/u12960270" target="_blank" style="color: var(--accent);">新片场</a> / <a href="https://www.behance.net/279117366bce9" target="_blank" style="color: var(--accent);">Behance</a></div>
                 </div>
             </div>
         </div>
@@ -337,17 +350,13 @@
     </div>
 
     <script>
-        // ★ 新增：触发画廊依次入场动画的函数
         function animateGalleryItems() {
             const items = document.querySelectorAll('#gallery-grid .grid-item');
             items.forEach((item, index) => {
-                // 每次切换时先移除动画类，确保下次还能触发
                 item.classList.remove('animate-in');
-                item.style.animationDelay = '0s'; // 重置延迟
-                
-                // 给浏览器一点时间重绘，然后重新加上类和延迟
+                item.style.animationDelay = '0s';
                 setTimeout(() => {
-                    item.style.animationDelay = `${index * 0.1}s`; // 每个卡片延迟 0.1 秒
+                    item.style.animationDelay = `${index * 0.1}s`;
                     item.classList.add('animate-in');
                 }, 50);
             });
@@ -367,15 +376,13 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // ★ 如果切换到 WORK 板块，触发依次浮现动画
             if(tabId === 'work') {
                 animateGalleryItems();
             }
         }
 
-        // 页面初次加载时，触发一次画廊动画
         window.addEventListener('DOMContentLoaded', () => {
-            animateGalleryItems();
+            // INFO页为首页时，画廊动画在点击WORK时触发
         });
 
         function openVideoModal(bvid) {
