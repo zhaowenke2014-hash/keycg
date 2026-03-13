@@ -46,16 +46,19 @@
 
         .main-container { padding: 0 60px 20px 60px; flex: 1; }
 
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        /* 板块整体的淡入动画 */
+        .tab-content { display: none; animation: fadeInTab 0.4s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .section-divider {
             font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--text-muted);
             margin: 20px 0 30px 0; text-transform: uppercase;
         }
 
-        /* 作品网格 */
+        /* ==================================================== */
+        /* ★ WORK 画廊网格与依次入场动画 ★ */
+        /* ==================================================== */
         .work-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -64,6 +67,21 @@
 
         .grid-item {
             position: relative; background-color: #222222; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer;
+            /* 默认隐藏，等待 JS 赋予动画类 */
+            opacity: 0; 
+            transform: translateY(20px);
+        }
+
+        /* 被 JS 赋予这个类之后，才会开始动画 */
+        .grid-item.animate-in {
+            animation: slideUpFade 0.6s ease forwards;
+        }
+
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .item-visual {
@@ -154,47 +172,20 @@
         .close-btn:hover { color: #FFF; }
         .modal-content iframe { width: 100%; height: 100%; border: none; }
 
-        /* ==================================================== */
-        /* ★ 移动端响应式适配 (Media Queries) ★ */
-        /* ==================================================== */
+        /* 移动端响应式适配 */
         @media (max-width: 768px) {
-            /* 1. 顶部导航栏折叠居中 */
-            header {
-                flex-direction: column;
-                padding: 30px 20px;
-                gap: 20px;
-            }
-            .nav-links {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
-            }
-            .nav-links a {
-                margin-left: 0;
-                font-size: 12px;
-            }
-
-            /* 2. 主体容器边距缩小 */
+            header { flex-direction: column; padding: 30px 20px; gap: 20px; }
+            .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .nav-links a { margin-left: 0; font-size: 12px; }
             .main-container { padding: 0 20px 20px 20px; }
-
-            /* 3. 网格变成单列铺满手机屏幕 */
             .work-grid { grid-template-columns: 1fr; }
             .tool-grid { grid-template-columns: 1fr; }
-
-            /* 4. 缩小卡片内部和文字的间距 */
             .tool-box { padding: 25px; }
             .terminal-content { padding: 20px; font-size: 13px; }
-            
-            /* 5. INFO 页面文字缩小以适应屏幕 */
             .slogan-en { font-size: 24px; }
             .info-section { padding-top: 40px; }
-            
-            /* 6. 视频弹窗在手机上占据更多宽度 */
             .modal-content { width: 95%; }
             .close-btn { top: -35px; right: 0; font-size: 24px; }
-            
-            /* 7. 手机端联系方式优化点击区域 */
             .contact-box { line-height: 2; font-size: 13px; }
             .contact-box div { margin-bottom: 15px; }
         }
@@ -216,7 +207,7 @@
         
         <div id="work" class="tab-content active">
             <div class="section-divider">Selected Work (Motion & Stills)</div>
-            <div class="work-grid">
+            <div class="work-grid" id="gallery-grid">
                 
                 <div class="grid-item" onclick="openVideoModal('BV1Jo4y1J7qa')">
                     <img src="如何用C4D制作建筑的生长动画.jpg" alt="C4D建筑生长动画" class="item-visual">
@@ -346,6 +337,22 @@
     </div>
 
     <script>
+        // ★ 新增：触发画廊依次入场动画的函数
+        function animateGalleryItems() {
+            const items = document.querySelectorAll('#gallery-grid .grid-item');
+            items.forEach((item, index) => {
+                // 每次切换时先移除动画类，确保下次还能触发
+                item.classList.remove('animate-in');
+                item.style.animationDelay = '0s'; // 重置延迟
+                
+                // 给浏览器一点时间重绘，然后重新加上类和延迟
+                setTimeout(() => {
+                    item.style.animationDelay = `${index * 0.1}s`; // 每个卡片延迟 0.1 秒
+                    item.classList.add('animate-in');
+                }, 50);
+            });
+        }
+
         function switchTab(tabId) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => {
@@ -358,9 +365,18 @@
             document.getElementById(tabId).classList.add('active');
             document.getElementById('tab-' + tabId).classList.add('active');
             
-            // 每次切换时自动滚回顶部，提升手机端体验
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // ★ 如果切换到 WORK 板块，触发依次浮现动画
+            if(tabId === 'work') {
+                animateGalleryItems();
+            }
         }
+
+        // 页面初次加载时，触发一次画廊动画
+        window.addEventListener('DOMContentLoaded', () => {
+            animateGalleryItems();
+        });
 
         function openVideoModal(bvid) {
             document.getElementById('videoModal').style.display = 'flex';
