@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYCG 赵文科 | DIRECTOR / CREATOR</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+            --accent: #FFD700;
+            --card-dark: #111111;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; 
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 60px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .logo { font-size: 16px; letter-spacing: 2px; color: var(--text-main); }
+
+        .nav-links a {
+            cursor: pointer; color: var(--text-muted); margin-left: 40px; transition: all 0.3s; padding-bottom: 5px;
+        }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-links a.active { color: var(--text-main); border-bottom: 2px solid var(--accent); }
+
+        .main-container { padding: 0 60px 20px 60px; flex: 1; }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-divider {
+            font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--text-muted);
+            margin: 20px 0 30px 0; text-transform: uppercase;
+        }
+
+        /* 作品网格 */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2px;
+        }
+
+        .grid-item {
+            position: relative; background-color: #222222; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer;
+        }
+
+        .item-visual {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block;
+        }
+
+        .item-overlay {
+            position: absolute; inset: 0; background: rgba(0, 0, 0, 0.9); color: #FFFFFF;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease; text-align: center; padding: 20px;
+        }
+
+        .grid-item:hover .item-overlay { opacity: 1; }
+        .grid-item:hover .item-visual { transform: scale(1.05); }
+
+        .overlay-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+        .overlay-tags { font-size: 12px; color: var(--accent); margin-bottom: 15px; }
+
+        /* 工具排版 */
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
+        .tool-box {
+            background-color: var(--card-dark); padding: 40px; border: 1px solid #2A2A2A;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .tool-title { font-size: 20px; font-weight: 700; margin: 0 0 15px 0; color: var(--text-main); }
+        .tool-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px; }
+
+        .btn-skeuomorphic {
+            align-self: flex-start; background: linear-gradient(to bottom, #FFE866, #FFD700); border: 1px solid #D6B500;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.1);
+            border-radius: 4px; padding: 10px 20px; color: #000; font-weight: bold; font-size: 13px; cursor: pointer; text-decoration: none; transition: all 0.1s;
+        }
+        .btn-skeuomorphic:active { background: #FFCF00; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2); transform: translateY(1px); }
+
+        /* 极客终端窗口 */
+        .terminal-window {
+            background-color: var(--card-dark); border: 1px solid #2A2A2A; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 40px;
+        }
+        .terminal-header {
+            background-color: #1a1a1a; padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #2A2A2A;
+        }
+        .dots-container { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background-color: #ff5f56; }
+        .dot.yellow { background-color: #ffbd2e; }
+        .dot.green { background-color: #27c93f; }
+
+        .terminal-content {
+            color: #E0E0E0; padding: 30px 40px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; overflow-x: auto;
+        }
+        .term-highlight { color: var(--accent); }
+        .term-comment { color: #555555; font-style: italic; }
+        .terminal-cursor {
+            display: inline-block; width: 8px; height: 15px; background-color: var(--accent); 
+            vertical-align: middle; margin-left: 2px; animation: blink 1s step-end infinite; 
+        }
+        @keyframes blink { from, to { background-color: transparent; } 50% { background-color: var(--accent); } }
+        
+        /* INFO 排版 */
+        .info-section {
+            display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 80px; padding-bottom: 40px;
+        }
+        .slogan-box { max-width: 800px; margin-bottom: 40px; } 
+        .slogan-en { 
+            font-family: 'Georgia', 'Times New Roman', serif; font-style: italic; font-size: 34px; font-weight: 400; line-height: 1.4; margin-bottom: 20px; color: var(--text-main); 
+        }
+        .slogan-cn { font-size: 15px; color: var(--text-muted); letter-spacing: 2px; }
+        
+        .info-image-box { margin-bottom: 50px; width: 100%; display: flex; justify-content: center; }
+        .info-hero-image { max-width: 320px; width: 100%; height: auto; opacity: 0.85; transition: opacity 0.4s ease; border-radius: 2px; }
+        .info-hero-image:hover { opacity: 1; }
+
+        .contact-box { font-size: 14px; line-height: 2.5; color: var(--text-muted); letter-spacing: 1px; }
+        .contact-box a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: color 0.3s; margin: 0 5px; }
+        .contact-box a:hover { color: var(--accent); }
+
+        /* 全局独立页脚 */
+        .global-footer { text-align: center; font-size: 10px; color: #444444; letter-spacing: 2px; padding: 40px 0; width: 100%; }
+
+        /* 视频播放器弹窗 */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.98);
+            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(20px);
+        }
+        .modal-content { width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; border: 1px solid #333; }
+        .close-btn { position: absolute; top: -40px; right: 0; color: var(--accent); font-size: 30px; cursor: pointer; transition: color 0.3s; }
+        .close-btn:hover { color: #FFF; }
+        .modal-content iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><span style="color: var(--accent);">KEYCG 赵文科</span> | DIRECTOR / CREATOR</div>
+        <div class="nav-links">
+            <a onclick="switchTab('work')" id="tab-work" class="active">WORK</a>
+            <a onclick="switchTab('tools')" id="tab-tools">TOOLS</a>
+            <a onclick="switchTab('rd')" id="tab-rd">R&D</a>
+            <a onclick="switchTab('info')" id="tab-info">INFO</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <div id="work" class="tab-content active">
+            <div class="section-divider">Selected Work (Motion & Stills)</div>
+            <div class="work-grid">
+                
+                <div class="grid-item" onclick="openVideoModal('BV1Jo4y1J7qa')">
+                    <img src="如何用C4D制作建筑的生长动画.jpg" alt="C4D建筑生长动画" class="item-visual">
+                    <div class="item-overlay">
+                        <div class="overlay-title">如何用 C4D 制作建筑的生长动画</div>
+                        <div class="overlay-tags">MOTION / C4D & MG</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                    </div>
+                </div>
+
+                <div class="grid-item" onclick="openVideoModal('BV13Z421M7Kq')">
+                    <img src="推拉摇移.jpg" alt="推拉摇移" class="item-visual">
+                    <div class="item-overlay">
+                        <div class="overlay-title">AE里如何推拉摇移</div>
+                        <div class="overlay-tags">MOTION / EDITING</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                    </div>
+                </div>
+
+                <div class="grid-item" onclick="openVideoModal('BV1ik4y1E7n3')">
+                    <img src="人文成都.jpg" alt="人文成都" class="item-visual">
+                    <div class="item-overlay">
+                        <div class="overlay-title">人文成都</div>
+                        <div class="overlay-tags">MOTION / DOCUMENTARY</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                    </div>
+                </div>
+
+                 <div class="grid-item" onclick="openVideoModal('BV1zs4y177pj')">
+                    <img src="如何用c4d制作图标小动画.jpg" alt="C4D 教程" class="item-visual">
+                    <div class="item-overlay">
+                        <div class="overlay-title">如何用 C4D 制作图标小动画</div>
+                        <div class="overlay-tags">MOTION / C4D & MG</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="tools" class="tab-content">
+            <div class="section-divider">Tools & Scripts</div>
+            <div class="tool-grid">
+                
+                <div class="tool-box">
+                    <div>
+                        <h3 class="tool-title">视频剪辑文件夹项目生成器</h3>
+                        <div class="tool-desc">
+                            专为后期剪辑流程打造的标准化目录构建工具。支持一键切换多种场景模版（包含 VLOG、短片，以及“企业宣传片”）。
+                        </div>
+                    </div>
+                    <a href="https://zhaowenke2014-hash.github.io/video-folder-generator/" target="_blank" class="btn-skeuomorphic">访问在线工具</a>
+                </div>
+
+                <div class="tool-box">
+                    <div>
+                        <h3 class="tool-title">双语 SRT 字幕自动生成工具</h3>
+                        <div class="tool-desc">
+                            为解决视频出海和多语言适配痛点开发的 Web 应用。能够读取纯文本并自动生成、格式化为标准双语 SRT 字幕文件，极大减少打轴时间。已在 GitHub 开源部署。
+                        </div>
+                    </div>
+                    <a href="https://zhaowenke2014-hash.github.io/subtitle-generator/" target="_blank" class="btn-skeuomorphic">访问在线工具</a>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="rd" class="tab-content">
+            <div class="section-divider">Hardware Log & Workshop</div>
+
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dots-container">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                </div>
+                <div class="terminal-content">
+                    <span class="term-comment"># WORKSTATION STATUS LOG</span><br><br>
+                    <span class="term-highlight">root@keycg:~$</span> check_thermal<br>
+                    [WARN] Thermal High. 水冷管发热中。<br><br>
+                    
+                    <span class="term-highlight">root@keycg:~$</span> check_storage<br>
+                    [ OK ] 硬盘冗余数据清理完毕。<br><br>
+                    
+                    <span class="term-highlight">root@keycg:~$</span> check_memory<br>
+                    <span style="color: #ff9e64;">[TODO]</span> 进 BIOS 开启 XMP。<br><br>
+
+                    <span class="term-highlight">root@nas:~$</span> ping synology.local<br>
+                    [ OK ] Web Service Online.<br><br>
+
+                    <span class="term-highlight">root@keycg:~$</span> <span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="info" class="tab-content">
+            <div class="info-section">
+                <div class="slogan-box">
+                    <div class="slogan-en">"Life is suffering. Yet he picked up his broken oar and set off again."</div>
+                    <div class="slogan-cn">生活是苦难的，他又划着他的断桨出发了……</div>
+                </div>
+
+                <div class="info-image-box">
+                    <img src="info.jpg" alt="He picked up his broken oar" class="info-hero-image">
+                </div>
+                
+                <div class="contact-box">
+                    <div>EMAIL / <a href="mailto:zhaowenke2014@QQ.com">zhaowenke2014@QQ.com</a></div>
+                    <div>关键帧KEYCG / <a href="https://space.bilibili.com/12201162" target="_blank" style="color: var(--accent);">BILIBILI</a> / <a href="https://www.xinpianchang.com/u12960270" target="_blank" style="color: var(--accent);">新片场</a> / <a href="https://www.behance.net/279117366bce9" target="_blank" style="color: var(--accent);">BEHANCE</a></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="global-footer">
+        © 2026 KEYCG 赵文科. ALL RIGHTS RESERVED.
+    </footer>
+
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeVideoModal()">&times;</span>
+            <iframe id="biliPlayer" src="" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            const tabs = document.querySelectorAll('.nav-links a');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function openVideoModal(bvid) {
+            document.getElementById('videoModal').style.display = 'flex';
+            const videoUrl = "https://player.bilibili.com/player.html?bvid=" + bvid + "&page=1&high_quality=1&danmaku=0";
+            document.getElementById('biliPlayer').src = videoUrl;
+        }
+        function closeVideoModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('biliPlayer').src = "";
+        }
+    </script>
+
+</body>
+</html>
