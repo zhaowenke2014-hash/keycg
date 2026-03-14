@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KEYCG 赵文科 | DIRECTOR / CREATOR</title>
+    <title>KEYCG 赵文科 | Editor / CG generalist</title>
+    
+    <link rel="icon" href="favicon.png" type="image/png">
+    
     <style>
         :root {
             --bg-color: #000000;
@@ -36,7 +39,17 @@
             text-transform: uppercase;
         }
 
-        .logo { font-size: 16px; letter-spacing: 2px; color: var(--text-main); text-align: center; }
+        .logo { 
+            font-size: 16px; 
+            letter-spacing: 2px; 
+            color: var(--text-main); 
+            text-align: center; 
+            cursor: pointer; 
+            transition: opacity 0.3s;
+        }
+        .logo:hover {
+            opacity: 0.8;
+        }
 
         .nav-links a {
             cursor: pointer; color: var(--text-muted); margin-left: 40px; transition: all 0.3s; padding-bottom: 5px;
@@ -136,23 +149,19 @@
         }
         @keyframes blink { from, to { background-color: transparent; } 50% { background-color: var(--accent); } }
         
-        /* ==================================================== */
-        /* ★ INFO 排版与顺序渐显动画 (Sequence Animation) ★ */
-        /* ==================================================== */
+        /* INFO 排版 */
         .info-section {
             display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 80px; padding-bottom: 40px;
         }
 
-        /* 1. 顶部台词动画设置 */
         .slogan-box { 
             max-width: 800px; 
             margin-bottom: 30px; 
-            opacity: 0; /* 默认隐藏 */
+            opacity: 0; 
         } 
-        /* 当进入 INFO 页时触发台词渐显 */
         .tab-content.active .slogan-box {
             animation: fadeInOpacity 2s ease forwards;
-            animation-delay: 0.2s; /* 切换过来后极短的缓冲，随后执行 2秒 渐显 */
+            animation-delay: 0.2s; 
         }
 
         .slogan-en { 
@@ -166,7 +175,6 @@
         }
         .slogan-cn { font-size: 15px; color: var(--text-muted); letter-spacing: 2px; margin-top: 10px;}
         
-        /* 2. 核心插图动画设置 */
         .info-image-box { margin-bottom: 50px; width: 100%; display: flex; justify-content: center; }
 
         .info-hero-image { 
@@ -177,10 +185,9 @@
             transition: opacity 0.4s ease; 
             border-radius: 2px; 
         }
-        /* 当进入 INFO 页时触发图片渐显 */
         .tab-content.active .info-hero-image {
             animation: fadeInImage 3s ease forwards;
-            animation-delay: 2s; /* 等待文字出现 2秒 后开始出图 */
+            animation-delay: 2s; 
         }
 
         @keyframes fadeInImage {
@@ -189,21 +196,18 @@
 
         .info-hero-image:hover { opacity: 1 !important; }
 
-        /* 3. 底部联系方式动画设置 */
         .contact-box { 
             font-size: 14px; 
             line-height: 2.5; 
             color: var(--text-muted); 
             letter-spacing: 1px; 
-            opacity: 0; /* 默认隐藏 */
+            opacity: 0; 
         }
-        /* 当进入 INFO 页时触发联系方式渐显 */
         .tab-content.active .contact-box {
             animation: fadeInOpacity 2s ease forwards;
-            animation-delay: 4s; /* 等到整体氛围烘托到位后，最后出落款 */
+            animation-delay: 4s; 
         }
 
-        /* 通用的渐显动画 */
         @keyframes fadeInOpacity {
             to { opacity: 1; }
         }
@@ -246,18 +250,18 @@
 <body>
 
     <header>
-        <div class="logo"><span style="color: var(--accent);">KEYCG 赵文科</span> | DIRECTOR / CREATOR</div>
+        <div class="logo" onclick="switchTab('work')"><span style="color: var(--accent);">KEYCG 赵文科</span> | Editor / CG generalist</div>
         <div class="nav-links">
-            <a onclick="switchTab('work')" id="tab-work">WORK</a>
+            <a onclick="switchTab('work')" id="tab-work" class="active">WORK</a>
             <a onclick="switchTab('tools')" id="tab-tools">TOOLS</a>
             <a onclick="switchTab('rd')" id="tab-rd">R&D</a>
-            <a onclick="switchTab('info')" id="tab-info" class="active">INFO</a>
+            <a onclick="switchTab('info')" id="tab-info">INFO</a>
         </div>
     </header>
 
     <div class="main-container">
         
-        <div id="work" class="tab-content">
+        <div id="work" class="tab-content active">
             <div class="section-divider">Selected Work (Motion & Stills)</div>
             <div class="work-grid" id="gallery-grid">
                 
@@ -350,7 +354,7 @@
             </div>
         </div>
 
-        <div id="info" class="tab-content active">
+        <div id="info" class="tab-content">
             <div class="info-section">
                 <div class="slogan-box">
                     <div class="slogan-en">"Life is suffering. Yet he picked up his broken oar and set off again."</div>
@@ -414,7 +418,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // INFO页为首页时，画廊动画在点击WORK时触发
+            animateGalleryItems();
         });
 
         function openVideoModal(bvid) {
