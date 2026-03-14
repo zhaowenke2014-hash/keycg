@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KEYCG 赵文科 | Editor / CG generalist</title>
-    
     <link rel="icon" href="favicon.png" type="image/png">
-    
     <style>
         :root {
             --bg-color: #000000;
@@ -68,10 +66,10 @@
             margin: 20px 0 30px 0; text-transform: uppercase;
         }
 
-        /* WORK 画廊与依次入场动画 */
+        /* ★ 修改点 1：将画廊的最小宽度从 400px 暴增至 700px，实现大屏上的“巨幕”视觉 */
         .work-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(700px, 1fr));
             gap: 2px;
         }
 
@@ -105,8 +103,9 @@
         .grid-item:hover .item-overlay { opacity: 1; }
         .grid-item:hover .item-visual { transform: scale(1.05); }
 
-        .overlay-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
-        .overlay-tags { font-size: 12px; color: var(--accent); margin-bottom: 15px; }
+        /* ★ 修改点 2：同步放大了图片上的悬浮文字，以匹配巨大化的图片 */
+        .overlay-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+        .overlay-tags { font-size: 14px; color: var(--accent); margin-bottom: 15px; }
 
         /* 工具排版 */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
@@ -234,6 +233,7 @@
             .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
             .nav-links a { margin-left: 0; font-size: 12px; }
             .main-container { padding: 0 20px 20px 20px; }
+            /* 手机端保持一列，且取消巨大的最小宽度 */
             .work-grid { grid-template-columns: 1fr; }
             .tool-grid { grid-template-columns: 1fr; }
             .tool-box { padding: 25px; }
@@ -244,6 +244,9 @@
             .close-btn { top: -35px; right: 0; font-size: 24px; }
             .contact-box { line-height: 2; font-size: 13px; }
             .contact-box div { margin-bottom: 15px; }
+            /* 手机端恢复较小的悬浮文字字号 */
+            .overlay-title { font-size: 18px; }
+            .overlay-tags { font-size: 12px; }
         }
     </style>
 </head>
@@ -266,38 +269,38 @@
             <div class="work-grid" id="gallery-grid">
                 
                 <div class="grid-item" onclick="openVideoModal('BV1Jo4y1J7qa')">
-                    <img src="如何用C4D制作建筑的生长动画.jpg" alt="C4D建筑生长动画" class="item-visual">
+                    <img src="如何用C4D制作建筑的生长动画.jpg" alt="C4D建筑生长动画" class="item-visual" loading="lazy">
                     <div class="item-overlay">
                         <div class="overlay-title">如何用 C4D 制作建筑的生长动画</div>
                         <div class="overlay-tags">MOTION / C4D & MG</div>
-                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                     </div>
                 </div>
 
                 <div class="grid-item" onclick="openVideoModal('BV13Z421M7Kq')">
-                    <img src="推拉摇移.jpg" alt="推拉摇移" class="item-visual">
+                    <img src="推拉摇移.jpg" alt="推拉摇移" class="item-visual" loading="lazy">
                     <div class="item-overlay">
                         <div class="overlay-title">AE里如何推拉摇移</div>
                         <div class="overlay-tags">MOTION / EDITING</div>
-                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                     </div>
                 </div>
 
                 <div class="grid-item" onclick="openVideoModal('BV1ik4y1E7n3')">
-                    <img src="人文成都.jpg" alt="人文成都" class="item-visual">
+                    <img src="人文成都.jpg" alt="人文成都" class="item-visual" loading="lazy">
                     <div class="item-overlay">
                         <div class="overlay-title">人文成都</div>
                         <div class="overlay-tags">MOTION / DOCUMENTARY</div>
-                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                     </div>
                 </div>
 
                  <div class="grid-item" onclick="openVideoModal('BV1zs4y177pj')">
-                    <img src="如何用c4d制作图标小动画.jpg" alt="C4D 教程" class="item-visual">
+                    <img src="如何用c4d制作图标小动画.jpg" alt="C4D 教程" class="item-visual" loading="lazy">
                     <div class="item-overlay">
                         <div class="overlay-title">如何用 C4D 制作图标小动画</div>
                         <div class="overlay-tags">MOTION / C4D & MG</div>
-                        <div style="font-size: 12px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                     </div>
                 </div>
 
@@ -362,7 +365,7 @@
                 </div>
 
                 <div class="info-image-box">
-                    <img src="info.jpg" alt="He picked up his broken oar" class="info-hero-image">
+                    <img src="info.jpg" alt="He picked up his broken oar" class="info-hero-image" loading="lazy">
                 </div>
                 
                 <div class="contact-box">
