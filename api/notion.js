@@ -15,12 +15,16 @@ export default async function handler(req, res) {
                 'Notion-Version': '2022-06-28',
                 'Content-Type': 'application/json'
             },
-            // --- 核心更新：加入排序逻辑 ---
+            // --- 核心更新：加入自定义双重排序逻辑 ---
             body: JSON.stringify({
                 sorts: [
                     {
-                        // 按照项目的创建时间 (created_time) 进行倒序排列 (descending)
-                        // 这样最新填入 Notion 的视频就会自动排在最前面
+                        // 第一优先级：按照 Notion 中名为 "Order" 的数字列进行升序排列 (1, 2, 3...)
+                        property: 'Order',
+                        direction: 'ascending'
+                    },
+                    {
+                        // 第二优先级：如果序号相同或者没填，则按照创建时间倒序排（新的在前）
                         timestamp: 'created_time',
                         direction: 'descending'
                     }
