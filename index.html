@@ -343,8 +343,8 @@
         
         <div id="work" class="tab-content active">
             <div class="section-divider">
-                <span data-zh>精选作品 (Motion & Stills)</span>
-                <span data-en>Selected Work (Motion & Stills)</span>
+                <span data-zh>精选作品</span>
+                <span data-en>Selected Work</span>
             </div>
             <div class="work-grid" id="gallery-grid">
                 <div style="padding: 20px; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; text-align: center; letter-spacing: 2px;">
@@ -560,9 +560,20 @@
                 projects.forEach(project => {
                     let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>";
                     
+                    // --- 全新：智能中英双语解析标题 ---
+                    const rawTitle = project.title || '未命名作品';
+                    // 用竖线 | 或斜杠 / 把标题切分为中英文两部分
+                    const titleParts = rawTitle.split(/[|｜/]/); 
+                    const titleZh = titleParts[0].trim();
+                    const titleEn = titleParts.length > 1 ? titleParts[1].trim() : titleZh; // 如果没写英文，默认使用中文占位
+
                     const bvidStr = project.bvid || ""; 
                     const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
-                    let displayTitle = links.length > 0 ? project.title : (`<span data-zh>⚠️ 链接读取失败</span><span data-en>⚠️ Link Read Failed</span> - ${project.title}`);
+                    
+                    // 根据是否提取到链接，组装最终显示的动态 HTML 标题
+                    let displayTitleHtml = links.length > 0 
+                        ? `<span data-zh>${titleZh}</span><span data-en>${titleEn}</span>` 
+                        : `<span data-zh>⚠️ 链接读取失败 - ${titleZh}</span><span data-en>⚠️ Link Read Failed - ${titleEn}</span>`;
 
                     let actionButtonsHtml = '';
 
@@ -611,13 +622,13 @@
                         const cardHtml = `
                             <div class="tutorial-card">
                                 <div class="tutorial-thumb-container">
-                                    <img src="${displayCover}" alt="${project.title}" class="tutorial-thumb" loading="lazy">
+                                    <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy">
                                     <div class="tutorial-hover-overlay">
                                         ${actionButtonsHtml}
                                     </div>
                                 </div>
                                 <div class="tutorial-info">
-                                    <h3 class="tutorial-title">${displayTitle}</h3>
+                                    <h3 class="tutorial-title">${displayTitleHtml}</h3>
                                     <div class="tutorial-desc">${project.tags}</div>
                                 </div>
                             </div>
@@ -627,9 +638,9 @@
                         workCount++;
                         const cardHtml = `
                             <div class="grid-item">
-                                <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
+                                <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy">
                                 <div class="item-overlay">
-                                    <div class="overlay-title">${displayTitle}</div>
+                                    <div class="overlay-title">${displayTitleHtml}</div>
                                     <div class="overlay-tags">${project.tags}</div>
                                     <div class="action-buttons">
                                         ${actionButtonsHtml}
