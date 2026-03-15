@@ -302,6 +302,7 @@
         .res-modal-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         .res-modal-list .resource-link { display: flex !important; }
 
+        /* PC端通用关闭按钮样式 */
         .close-btn { position: absolute; top: -45px; right: 0; color: #FFF; font-size: 32px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1001; opacity: 0.6; }
         .close-btn:hover { color: var(--accent); opacity: 1; transform: scale(1.1); }
 
@@ -323,7 +324,22 @@
             .info-section { padding-top: 40px; }
             #videoModal .modal-content { width: 95%; }
             #resourceModal .modal-content { width: 95%; padding: 20px; max-height: 85vh; }
-            .close-btn { top: -35px; right: 0; font-size: 24px; }
+            
+            /* 手机端专用：优化弹窗关闭按钮的点击体验 (防边缘误触、增加玻璃底托) */
+            .close-btn { 
+                top: -54px; 
+                right: 4px; /* 留出安全边距 */
+                font-size: 32px; 
+                width: 44px; /* 满足 Apple 最小点击热区标准 */
+                height: 44px; 
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(255, 255, 255, 0.15); /* 毛玻璃圆形底托 */
+                border-radius: 50%; 
+                opacity: 1; 
+                backdrop-filter: blur(4px);
+            }
         }
     </style>
 </head>
