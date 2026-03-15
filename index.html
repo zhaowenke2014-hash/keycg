@@ -320,7 +320,7 @@
                     <span data-zh>导航</span><span data-en>LINKS</span>
                 </a>
                 <a onclick="switchTab('info')" id="tab-info">
-                    <span data-zh>关于我</span><span data-en>INFO</span>
+                    <span data-zh>关于</span><span data-en>INFO</span>
                 </a>
                 <!-- 滑动指示器元素 -->
                 <div class="nav-indicator" id="nav-indicator"></div>
@@ -371,7 +371,7 @@
             </div>
             <div class="resource-grid">
                 
-                <!-- AI 大模型与搜索 -->
+                <!-- 1. AI 大模型与搜索 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>💬 AI 大模型与搜索</span><span data-en>💬 LLM & Search</span>
@@ -392,7 +392,7 @@
                     </div>
                 </div>
 
-                <!-- AI 图像与设计 -->
+                <!-- 2. AI 图像与设计 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🎨 AI 图像与设计</span><span data-en>🎨 AI Image & Design</span>
@@ -411,7 +411,7 @@
                     </div>
                 </div>
 
-                <!-- AI 视频与 3D -->
+                <!-- 3. AI 视频与 3D -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🎥 AI 视频与 3D</span><span data-en>🎥 AI Video & 3D</span>
@@ -432,7 +432,77 @@
                     </div>
                 </div>
 
-                <!-- 全新：免费商用中文字体 (移动到第4位) -->
+                <!-- 4. AI 音视效与效率 (已移至第四位) -->
+                <div class="resource-category">
+                    <div class="category-title">
+                        <span data-zh>🎵 AI 音视效与效率</span><span data-en>🎵 AI Audio & Tools</span>
+                    </div>
+                    <div class="resource-list">
+                        <a href="https://suno.com/" target="_blank" class="resource-link">Suno<span data-zh> (爆款 AI 音乐生成)</span><span data-en> (Music Gen)</span></a>
+                        <a href="https://www.heygen.com/" target="_blank" class="resource-link">HeyGen<span data-zh> (顶级 AI 数字人播报)</span><span data-en> (AI Avatars)</span></a>
+                        <a href="https://www.rask.ai/" target="_blank" class="resource-link">Rask AI<span data-zh> (视频多语言翻译配音)</span><span data-en> (Video Translation)</span></a>
+                        <a href="https://cursor.com/" target="_blank" class="resource-link">Cursor<span data-zh> (最强 AI 编程 IDE)</span><span data-en> (AI Coding IDE)</span></a>
+                        <a href="https://vmake.ai/" target="_blank" class="resource-link">Vmake<span data-zh> (电商图片视频处理)</span><span data-en> (E-commerce Media)</span></a>
+                    </div>
+                    <div class="resource-more-btn" onclick="openResModal(event, this)">
+                        <span data-zh>查看更多 (5)</span><span data-en>View More (5)</span>
+                    </div>
+                </div>
+
+                <!-- 5. 矢量图标与插画 -->
+                <div class="resource-category">
+                    <div class="category-title">
+                        <span data-zh>✨ 矢量图标与插画</span><span data-en>✨ Icons & Illustrations</span>
+                    </div>
+                    <div class="resource-list">
+                        <a href="https://remixicon.com/" target="_blank" class="resource-link">REMIX ICON<span data-zh> (开源中性风格图标库)</span><span data-en> (Open Source Icons)</span></a>
+                        <a href="https://iconpark.oceanengine.com/" target="_blank" class="resource-link">IconPark<span data-zh> (字节高质量开源图标)</span><span data-en> (ByteDance Icons)</span></a>
+                        <a href="https://feathericons.com/" target="_blank" class="resource-link">Feather<span data-zh> (极简线性图标库)</span><span data-en> (Minimalist Icons)</span></a>
+                        <a href="https://undraw.co/" target="_blank" class="resource-link">unDraw<span data-zh> (免费开源扁平插画)</span><span data-en> (Open Source Illustrations)</span></a>
+                        <a href="https://www.opendoodles.com/" target="_blank" class="resource-link">OpenDoodles<span data-zh> (免费手绘涂鸦插画)</span><span data-en> (Hand-drawn Illustrations)</span></a>
+                        <a href="https://www.humaaans.com/" target="_blank" class="resource-link">humaaans<span data-zh> (可混搭的人物插画)</span><span data-en> (Mix-&-Match Humans)</span></a>
+                    </div>
+                    <div class="resource-more-btn" onclick="openResModal(event, this)">
+                        <span data-zh>查看更多 (6)</span><span data-en>View More (6)</span>
+                    </div>
+                </div>
+
+                <!-- 6. 配色与渐变灵感 -->
+                <div class="resource-category">
+                    <div class="category-title">
+                        <span data-zh>🎨 配色与渐变灵感</span><span data-en>🎨 Colors & Gradients</span>
+                    </div>
+                    <div class="resource-list">
+                        <a href="https://colordesigner.io/" target="_blank" class="resource-link">ColorDesigner<span data-zh> (专业调色板生成器)</span><span data-en> (Palette Generator)</span></a>
+                        <a href="https://picular.co/" target="_blank" class="resource-link">Picular<span data-zh> (色彩的谷歌搜索引擎)</span><span data-en> (Color Search Engine)</span></a>
+                        <a href="https://colorhub.me/" target="_blank" class="resource-link">Colorhub<span data-zh> (高清图片配色提取)</span><span data-en> (Image Color Extraction)</span></a>
+                        <a href="https://colrd.com/" target="_blank" class="resource-link">Colrd<span data-zh> (色彩和渐变分享社区)</span><span data-en> (Color & Gradient Community)</span></a>
+                        <a href="https://coolors.co/" target="_blank" class="resource-link">Coolors<span data-zh> (超快配色方案生成)</span><span data-en> (Fast Palettes)</span></a>
+                        <a href="https://color.adobe.com/" target="_blank" class="resource-link">Adobe Color<span data-zh> (专业色轮调色)</span><span data-en> (Pro Color Wheel)</span></a>
+                    </div>
+                    <div class="resource-more-btn" onclick="openResModal(event, this)">
+                        <span data-zh>查看更多 (6)</span><span data-en>View More (6)</span>
+                    </div>
+                </div>
+
+                <!-- 7. 字体库与聚合站 -->
+                <div class="resource-category">
+                    <div class="category-title">
+                        <span data-zh>🔤 字体库与聚合站</span><span data-en>🔤 Font Libraries</span>
+                    </div>
+                    <div class="resource-list">
+                        <a href="https://fonts.google.com/" target="_blank" class="resource-link">Google Fonts<span data-zh> (全球最全免费字体)</span><span data-en> (Global Fonts)</span></a>
+                        <a href="https://www.zcool.com.cn/font" target="_blank" class="resource-link">站酷免费字体<span data-zh> (中文字体库聚合)</span><span data-en> (Chinese Fonts)</span></a>
+                        <a href="https://www.100font.com/" target="_blank" class="resource-link">100font 免费字体<span data-zh> (免费商用中文收集)</span><span data-en> (Commercial Free)</span></a>
+                        <a href="https://ziyouziti.com/" target="_blank" class="resource-link">自由字体<span data-zh> (开源聚合网站)</span><span data-en> (Open Source Aggregator)</span></a>
+                        <a href="https://www.fontsquirrel.com/" target="_blank" class="resource-link">Font Squirrel<span data-zh> (高质量免费英文字体)</span><span data-en> (HQ Free English Fonts)</span></a>
+                    </div>
+                    <div class="resource-more-btn" onclick="openResModal(event, this)">
+                        <span data-zh>查看更多 (5)</span><span data-en>View More (5)</span>
+                    </div>
+                </div>
+
+                <!-- 8. 免费商用中文字体 (移至字体库后排在一起) -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🀄 免费商用中文字体</span><span data-en>🀄 Free Chinese Fonts</span>
@@ -457,60 +527,7 @@
                     </div>
                 </div>
 
-                <!-- 矢量图标与插画 -->
-                <div class="resource-category">
-                    <div class="category-title">
-                        <span data-zh>✨ 矢量图标与插画</span><span data-en>✨ Icons & Illustrations</span>
-                    </div>
-                    <div class="resource-list">
-                        <a href="https://remixicon.com/" target="_blank" class="resource-link">REMIX ICON<span data-zh> (开源中性风格图标库)</span><span data-en> (Open Source Icons)</span></a>
-                        <a href="https://iconpark.oceanengine.com/" target="_blank" class="resource-link">IconPark<span data-zh> (字节高质量开源图标)</span><span data-en> (ByteDance Icons)</span></a>
-                        <a href="https://feathericons.com/" target="_blank" class="resource-link">Feather<span data-zh> (极简线性图标库)</span><span data-en> (Minimalist Icons)</span></a>
-                        <a href="https://undraw.co/" target="_blank" class="resource-link">unDraw<span data-zh> (免费开源扁平插画)</span><span data-en> (Open Source Illustrations)</span></a>
-                        <a href="https://www.opendoodles.com/" target="_blank" class="resource-link">OpenDoodles<span data-zh> (免费手绘涂鸦插画)</span><span data-en> (Hand-drawn Illustrations)</span></a>
-                        <a href="https://www.humaaans.com/" target="_blank" class="resource-link">humaaans<span data-zh> (可混搭的人物插画)</span><span data-en> (Mix-&-Match Humans)</span></a>
-                    </div>
-                    <div class="resource-more-btn" onclick="openResModal(event, this)">
-                        <span data-zh>查看更多 (6)</span><span data-en>View More (6)</span>
-                    </div>
-                </div>
-
-                <!-- 配色与渐变灵感 -->
-                <div class="resource-category">
-                    <div class="category-title">
-                        <span data-zh>🎨 配色与渐变灵感</span><span data-en>🎨 Colors & Gradients</span>
-                    </div>
-                    <div class="resource-list">
-                        <a href="https://colordesigner.io/" target="_blank" class="resource-link">ColorDesigner<span data-zh> (专业调色板生成器)</span><span data-en> (Palette Generator)</span></a>
-                        <a href="https://picular.co/" target="_blank" class="resource-link">Picular<span data-zh> (色彩的谷歌搜索引擎)</span><span data-en> (Color Search Engine)</span></a>
-                        <a href="https://colorhub.me/" target="_blank" class="resource-link">Colorhub<span data-zh> (高清图片配色提取)</span><span data-en> (Image Color Extraction)</span></a>
-                        <a href="https://colrd.com/" target="_blank" class="resource-link">Colrd<span data-zh> (色彩和渐变分享社区)</span><span data-en> (Color & Gradient Community)</span></a>
-                        <a href="https://coolors.co/" target="_blank" class="resource-link">Coolors<span data-zh> (超快配色方案生成)</span><span data-en> (Fast Palettes)</span></a>
-                        <a href="https://color.adobe.com/" target="_blank" class="resource-link">Adobe Color<span data-zh> (专业色轮调色)</span><span data-en> (Pro Color Wheel)</span></a>
-                    </div>
-                    <div class="resource-more-btn" onclick="openResModal(event, this)">
-                        <span data-zh>查看更多 (6)</span><span data-en>View More (6)</span>
-                    </div>
-                </div>
-
-                <!-- 字体库与聚合站 -->
-                <div class="resource-category">
-                    <div class="category-title">
-                        <span data-zh>🔤 字体库与聚合站</span><span data-en>🔤 Font Libraries</span>
-                    </div>
-                    <div class="resource-list">
-                        <a href="https://fonts.google.com/" target="_blank" class="resource-link">Google Fonts<span data-zh> (全球最全免费字体)</span><span data-en> (Global Fonts)</span></a>
-                        <a href="https://www.zcool.com.cn/font" target="_blank" class="resource-link">站酷免费字体<span data-zh> (中文字体库聚合)</span><span data-en> (Chinese Fonts)</span></a>
-                        <a href="https://www.100font.com/" target="_blank" class="resource-link">100font 免费字体<span data-zh> (免费商用中文收集)</span><span data-en> (Commercial Free)</span></a>
-                        <a href="https://ziyouziti.com/" target="_blank" class="resource-link">自由字体<span data-zh> (开源聚合网站)</span><span data-en> (Open Source Aggregator)</span></a>
-                        <a href="https://www.fontsquirrel.com/" target="_blank" class="resource-link">Font Squirrel<span data-zh> (高质量免费英文字体)</span><span data-en> (HQ Free English Fonts)</span></a>
-                    </div>
-                    <div class="resource-more-btn" onclick="openResModal(event, this)">
-                        <span data-zh>查看更多 (5)</span><span data-en>View More (5)</span>
-                    </div>
-                </div>
-
-                <!-- 免版权图片 -->
+                <!-- 9. 免版权图片 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🖼️ 免版权图片</span><span data-en>🖼️ Free Stock Photos</span>
@@ -527,7 +544,7 @@
                     </div>
                 </div>
 
-                <!-- 视频与实拍素材 -->
+                <!-- 10. 视频与实拍素材 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🎬 视频与实拍素材</span><span data-en>🎬 Free Stock Videos</span>
@@ -544,7 +561,7 @@
                     </div>
                 </div>
 
-                <!-- 音频素材 -->
+                <!-- 11. 音频素材 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>🎵 音效与音乐素材</span><span data-en>🎵 Audio & Music</span>
@@ -561,7 +578,7 @@
                     </div>
                 </div>
 
-                <!-- 灵感参考 -->
+                <!-- 12. 灵感参考 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>💡 灵感与审美参考</span><span data-en>💡 Inspiration</span>
@@ -579,24 +596,7 @@
                     </div>
                 </div>
 
-                <!-- AI 语音、数字人与效率 -->
-                <div class="resource-category">
-                    <div class="category-title">
-                        <span data-zh>🎵 AI 音视效与效率</span><span data-en>🎵 AI Audio & Tools</span>
-                    </div>
-                    <div class="resource-list">
-                        <a href="https://suno.com/" target="_blank" class="resource-link">Suno<span data-zh> (爆款 AI 音乐生成)</span><span data-en> (Music Gen)</span></a>
-                        <a href="https://www.heygen.com/" target="_blank" class="resource-link">HeyGen<span data-zh> (顶级 AI 数字人播报)</span><span data-en> (AI Avatars)</span></a>
-                        <a href="https://www.rask.ai/" target="_blank" class="resource-link">Rask AI<span data-zh> (视频多语言翻译配音)</span><span data-en> (Video Translation)</span></a>
-                        <a href="https://cursor.com/" target="_blank" class="resource-link">Cursor<span data-zh> (最强 AI 编程 IDE)</span><span data-en> (AI Coding IDE)</span></a>
-                        <a href="https://vmake.ai/" target="_blank" class="resource-link">Vmake<span data-zh> (电商图片视频处理)</span><span data-en> (E-commerce Media)</span></a>
-                    </div>
-                    <div class="resource-more-btn" onclick="openResModal(event, this)">
-                        <span data-zh>查看更多 (5)</span><span data-en>View More (5)</span>
-                    </div>
-                </div>
-
-                <!-- 前端生成器与小工具 -->
+                <!-- 13. 前端生成器与小工具 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>💻 前端生成器与工具</span><span data-en>💻 CSS Generators & Tools</span>
@@ -613,7 +613,7 @@
                     </div>
                 </div>
 
-                <!-- 样机与 UI 资源 -->
+                <!-- 14. 样机与 UI 资源 -->
                 <div class="resource-category">
                     <div class="category-title">
                         <span data-zh>📦 样机与 UI 资源</span><span data-en>📦 Mockups & UI Assets</span>
