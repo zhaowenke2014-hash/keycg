@@ -49,11 +49,35 @@
             opacity: 0.8;
         }
 
+        /* 升级版导航栏：增加 relative 定位，方便指示器滑动 */
+        .nav-links {
+            position: relative;
+        }
+        
         .nav-links a {
-            cursor: pointer; color: var(--text-muted); margin-left: 40px; transition: all 0.3s; padding-bottom: 5px;
+            cursor: pointer; 
+            color: var(--text-muted); 
+            margin-left: 40px; 
+            transition: color 0.3s; /* 去掉 all 防止和 js 滑块冲突 */
+            padding-bottom: 5px;
+            display: inline-block; /* 保证 offsetWidth 精确获取文字宽度 */
         }
         .nav-links a:hover { color: var(--text-main); }
-        .nav-links a.active { color: var(--text-main); border-bottom: 2px solid var(--accent); }
+        .nav-links a.active { color: var(--text-main); } /* 去掉了原本死板的 border-bottom */
+
+        /* 全新：顺滑流光指示器 */
+        .nav-indicator {
+            position: absolute;
+            height: 2px;
+            background-color: var(--accent);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0; /* 初始隐藏，等 JS 算出位置再显示，防跳闪 */
+            border-radius: 2px;
+        }
 
         .main-container { padding: 0 60px 20px 60px; flex: 1; }
 
@@ -107,7 +131,7 @@
         .tutorial-thumb { width: 100%; height: 100%; background-color: #1a1a1a; object-fit: cover; transition: transform 0.5s ease; }
         .tutorial-card:hover .tutorial-thumb { transform: scale(1.05); }
         
-        /* 全新：封面悬停暗化遮罩层 */
+        /* 封面悬停暗化遮罩层 */
         .tutorial-hover-overlay {
             position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85);
             display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;
@@ -120,7 +144,7 @@
         .tutorial-card:hover .tutorial-title { color: var(--accent); }
         .tutorial-desc { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.6; }
 
-        /* 全新：平台动态发光按钮样式 */
+        /* 平台动态发光按钮样式 */
         .action-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
         .action-btn {
             padding: 10px 22px;
@@ -216,6 +240,8 @@
             <a onclick="switchTab('tools')" id="tab-tools">TOOLS</a>
             <a onclick="switchTab('tutorial')" id="tab-tutorial">TUTORIAL</a>
             <a onclick="switchTab('info')" id="tab-info">INFO</a>
+            <!-- 滑动指示器元素 -->
+            <div class="nav-indicator" id="nav-indicator"></div>
         </div>
     </header>
 
@@ -297,6 +323,17 @@
     </div>
 
     <script>
+        // 专门更新指示器位置的函数
+        function updateIndicator(tabElement) {
+            const indicator = document.getElementById('nav-indicator');
+            if (indicator && tabElement) {
+                indicator.style.width = `${tabElement.offsetWidth}px`;
+                indicator.style.left = `${tabElement.offsetLeft}px`;
+                // 计算出恰好贴紧文字下边缘的位置，代替原本的 border-bottom
+                indicator.style.top = `${tabElement.offsetTop + tabElement.offsetHeight}px`; 
+            }
+        }
+
         function animateGalleryItems() {
             const items = document.querySelectorAll('.grid-item, .tutorial-card');
             items.forEach((item, index) => {
@@ -309,13 +346,11 @@
             });
         }
 
-        // 终极形态：支持多条链接的智能分发板块
         async function loadNotionProjects() {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
 
             try {
-                // 兼容正式环境与预览环境
                 const apiUrl = window.location.hostname.includes('keycg.cn') 
                     ? '/api/notion' 
                     : 'https://www.keycg.cn/api/notion';
@@ -334,18 +369,16 @@
                     let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>未读取到 CoverURL</text></svg>";
                     
                     const bvidStr = project.bvid || ""; 
-                    // 核心逻辑：按逗号或空格拆分出多个链接
                     const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
                     let displayTitle = links.length > 0 ? project.title : ("⚠️ 链接读取失败 - " + project.title);
 
-                    // --- 遍历并生成所有按键 ---
                     let actionButtonsHtml = '';
 
                     links.forEach(link => {
                         let clickAction = '';
                         let platformLabel = '📄 ARTICLE';
-                        let platformColor = '#00D68F'; // 默认绿色
-                        let btnTag = 'div'; // 默认弹窗用 div，外链用 a
+                        let platformColor = '#00D68F'; 
+                        let btnTag = 'div'; 
 
                         if (link.startsWith('BV')) {
                             clickAction = `onclick="openVideoModal('bilibili', '${link}')"`;
@@ -356,7 +389,7 @@
                             const ytId = ytMatch ? ytMatch[1] : '';
                             clickAction = `onclick="openVideoModal('youtube', '${ytId}')"`;
                             platformLabel = '▶ YOUTUBE';
-                            platformColor = '#FF3333'; // 柔和舒适的红色
+                            platformColor = '#FF3333'; 
                         } else if (link.includes('xinpianchang.com')) {
                             btnTag = 'a';
                             clickAction = `href="${link}" target="_blank"`;
@@ -376,7 +409,6 @@
                         `;
                     });
 
-                    // --- 智能板块分发 ---
                     const tagUpper = (project.tags || '').toUpperCase();
                     const isTutorial = tagUpper.includes('TUTORIAL') || tagUpper.includes('教程');
 
@@ -435,8 +467,15 @@
             tabs.forEach(tab => {
                 tab.classList.remove('active');
             });
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            const activeTabContent = document.getElementById(tabId);
+            const activeTabBtn = document.getElementById('tab-' + tabId);
+            
+            activeTabContent.classList.add('active');
+            activeTabBtn.classList.add('active');
+            
+            // 触发黄线滑动动画
+            updateIndicator(activeTabBtn);
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -447,9 +486,23 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             loadNotionProjects(); 
+            
+            // 页面首次加载，延迟一点等字体渲染好，设置指示器的初始位置和显示
+            setTimeout(() => {
+                const activeTab = document.querySelector('.nav-links a.active');
+                if(activeTab) {
+                    updateIndicator(activeTab);
+                    document.getElementById('nav-indicator').style.opacity = '1';
+                }
+            }, 100);
         });
 
-        // 升级版弹窗：支持 B站 和 YouTube
+        // 窗口尺寸改变时，同步更新指示器的位置，防止错位
+        window.addEventListener('resize', () => {
+            const activeTab = document.querySelector('.nav-links a.active');
+            if(activeTab) updateIndicator(activeTab);
+        });
+
         function openVideoModal(platform, vid) {
             document.getElementById('videoModal').style.display = 'flex';
             const iframe = document.getElementById('videoIframe');
