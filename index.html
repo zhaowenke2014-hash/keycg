@@ -283,12 +283,57 @@
         .close-btn:hover { color: #FFF; }
         .modal-content iframe { width: 100%; height: 100%; border: none; }
 
+        /* ================= 移动端专属极致响应式排版 ================= */
         @media (max-width: 768px) {
-            header { flex-direction: column; padding: 30px 20px; gap: 20px; }
-            .header-right { flex-direction: column; gap: 20px; }
-            .controls-group { margin-left: 0; }
-            .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
-            .nav-links a { margin-left: 0; font-size: 14px; }
+            header { 
+                padding: 25px 20px 20px 20px; 
+                flex-direction: column; 
+                align-items: flex-start; /* 整体靠左对齐 */
+                gap: 25px; /* logo组与导航栏的间距 */
+            }
+            
+            /* 1. 标题解构重组：拆分上下两行，隐藏竖线 */
+            .logo {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+                gap: 6px;
+                line-height: 1.2;
+            }
+            .logo-name { font-size: 22px; }
+            .logo-divider { display: none; } /* 移动端隐藏竖线 */
+            .logo-title { font-size: 12px; color: var(--text-muted); font-weight: normal; letter-spacing: 1px; }
+
+            .header-right { 
+                width: 100%;
+                flex-direction: column; 
+                gap: 0; 
+            }
+            
+            /* 2. 控制面板悬浮置顶：绝对定位到右上角 */
+            .controls-group { 
+                position: absolute;
+                top: 25px;
+                right: 20px;
+                margin-left: 0; 
+                gap: 8px;
+            }
+            
+            /* 3. 导航栏等距分布：占满宽度并两端对齐 */
+            .nav-links { 
+                width: 100%;
+                display: flex; 
+                justify-content: space-between; 
+                gap: 0; 
+            }
+            .nav-links a { 
+                margin-left: 0; 
+                font-size: 14px; 
+                padding-bottom: 8px; /* 增加手指点击区域 */
+            }
+            
+            /* 其他移动端元素适配 */
             .main-container { padding: 0 20px 20px 20px; }
             .work-grid, .tutorial-grid, .tool-grid { grid-template-columns: 1fr; }
             .tool-box { padding: 25px; }
@@ -307,7 +352,9 @@
 
     <header>
         <div class="logo" onclick="switchTab('work')">
-            <span style="color: var(--accent);">KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span></span> | <span data-zh>剪辑师 / CG动态设计师</span><span data-en>Editor / CG generalist</span>
+            <span class="logo-name" style="color: var(--accent);">KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span></span>
+            <span class="logo-divider"> | </span>
+            <span class="logo-title"><span data-zh>剪辑师 / CG动态设计师</span><span data-en>Editor / CG generalist</span></span>
         </div>
         
         <div class="header-right">
