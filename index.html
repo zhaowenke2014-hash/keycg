@@ -262,45 +262,14 @@
         
         <div id="work" class="tab-content active">
             <div class="section-divider">Selected Work (Motion & Stills)</div>
+            
+            <!-- 这里变成了等待 Notion 数据的容器 -->
             <div class="work-grid" id="gallery-grid">
-                
-                <div class="grid-item" onclick="openVideoModal('BV1Jo4y1J7qa')">
-                    <img src="jianzhushengzhang.jpg" alt="C4D建筑生长动画" class="item-visual" loading="lazy">
-                    <div class="item-overlay">
-                        <div class="overlay-title">如何用 C4D 制作建筑的生长动画</div>
-                        <div class="overlay-tags">MOTION / C4D & MG</div>
-                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
-                    </div>
+                <div style="padding: 20px; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; text-align: center; letter-spacing: 2px;">
+                    SYNCING SECURE DATA FROM NOTION...
                 </div>
-
-                <div class="grid-item" onclick="openVideoModal('BV13Z421M7Kq')">
-                    <img src="tuilayaoyi.jpg" alt="推拉摇移" class="item-visual" loading="lazy">
-                    <div class="item-overlay">
-                        <div class="overlay-title">AE里如何推拉摇移</div>
-                        <div class="overlay-tags">MOTION / EDITING</div>
-                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
-                    </div>
-                </div>
-
-                <div class="grid-item" onclick="openVideoModal('BV1ik4y1E7n3')">
-                    <img src="renwenchengdu.jpg" alt="人文成都" class="item-visual" loading="lazy">
-                    <div class="item-overlay">
-                        <div class="overlay-title">人文成都</div>
-                        <div class="overlay-tags">MOTION / DOCUMENTARY</div>
-                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
-                    </div>
-                </div>
-
-                 <div class="grid-item" onclick="openVideoModal('BV1zs4y177pj')">
-                    <img src="tubiaoshengzhang.jpg" alt="C4D 教程" class="item-visual" loading="lazy">
-                    <div class="item-overlay">
-                        <div class="overlay-title">如何用 C4D 制作图标小动画</div>
-                        <div class="overlay-tags">MOTION / C4D & MG</div>
-                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
-                    </div>
-                </div>
-
             </div>
+
         </div>
 
         <div id="tools" class="tab-content">
@@ -397,6 +366,50 @@
             });
         }
 
+        // 核心突破：动态请求后端 API 并生成 HTML 模块
+        async function loadNotionProjects() {
+            const grid = document.getElementById('gallery-grid');
+            try {
+                // 向我们刚刚搭建的 Vercel API 发送请求
+                const res = await fetch('/api/notion');
+                if (!res.ok) throw new Error('API Request Failed');
+                const projects = await res.json();
+                
+                grid.innerHTML = ''; // 数据拿到后，清空加载提示文字
+
+                // 如果表格是空的，给个优雅的提示
+                if (projects.length === 0) {
+                    grid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;">Notion 数据库暂无作品。</div>';
+                    return;
+                }
+
+                // 遍历表格里的每一行数据，生成对应的巨幕卡片
+                projects.forEach(project => {
+                    // 容错：如果这一行的视频 BVID 或者封面没填，就自动跳过不显示
+                    if (!project.bvid || !project.coverUrl) return; 
+                    
+                    const html = `
+                        <div class="grid-item" onclick="openVideoModal('${project.bvid}')">
+                            <img src="${project.coverUrl}" alt="${project.title}" class="item-visual" loading="lazy">
+                            <div class="item-overlay">
+                                <div class="overlay-title">${project.title}</div>
+                                <div class="overlay-tags">${project.tags}</div>
+                                <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
+                            </div>
+                        </div>
+                    `;
+                    // 将生成的卡片依次塞进网格里
+                    grid.insertAdjacentHTML('beforeend', html);
+                });
+                
+                // 卡片全部塞进去之后，立刻触发渐显动画
+                animateGalleryItems();
+            } catch (error) {
+                console.error(error);
+                grid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;">读取数据库失败，请检查 Vercel 环境变量配置。</div>';
+            }
+        }
+
         function switchTab(tabId) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => {
@@ -411,13 +424,15 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // 切换回 work 面板时，重新播放渐显动画
             if(tabId === 'work') {
                 animateGalleryItems();
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            animateGalleryItems();
+            // 网页加载完成的第一时间，直接调用函数去请求 Notion 数据
+            loadNotionProjects(); 
         });
 
         function openVideoModal(bvid) {
