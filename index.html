@@ -253,10 +253,11 @@
         © 2026 KEYCG 赵文科. ALL RIGHTS RESERVED.
     </footer>
 
+    <!-- 弹窗播放器 (兼容 B站和 YouTube) -->
     <div class="modal-overlay" id="videoModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeVideoModal()">&times;</span>
-            <iframe id="biliPlayer" src="" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+            <iframe id="videoIframe" src="" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
         </div>
     </div>
 
@@ -273,7 +274,7 @@
             });
         }
 
-        // 终极形态：一套代码，智能分发至 WORK 和 TUTORIAL 两个板块
+        // 终极形态：一套代码，智能识别全平台链接，智能分发板块
         async function loadNotionProjects() {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
@@ -296,78 +297,78 @@
 
                 projects.forEach(project => {
                     let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>未读取到 CoverURL</text></svg>";
-                    let displayTitle = project.bvid ? project.title : ("⚠️ BVID 读取失败 - " + project.title);
+                    let displayTitle = project.bvid ? project.title : ("⚠️ 链接读取失败 - " + project.title);
                     let displayLink = project.bvid || ""; 
 
-                    // 1. 判断该数据是图文链接，还是 B站视频
-                    const isArticle = displayLink.startsWith('http');
-                    // 2. 核心判定逻辑：只要 Tags 包含 TUTORIAL 或 教程，就归类为教程
+                    // --- 核心：智能平台解析器 ---
+                    let platformType = 'article';
+                    let clickAction = '';
+                    let platformLabel = '📄 ARTICLE';
+                    let platformColor = '#00D68F'; // 默认绿色
+                    let cardTag = 'div'; // 默认弹窗用 div，外链用 a
+
+                    if (displayLink.startsWith('BV')) {
+                        // 1. 识别 B 站
+                        platformType = 'bilibili';
+                        clickAction = `onclick="openVideoModal('bilibili', '${displayLink}')"`;
+                        platformLabel = '▶ BILIBILI';
+                        platformColor = 'var(--accent)';
+                    } else if (displayLink.includes('youtube.com') || displayLink.includes('youtu.be')) {
+                        // 2. 识别 YouTube (用正则提取出视频 ID)
+                        platformType = 'youtube';
+                        const ytMatch = displayLink.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                        const ytId = ytMatch ? ytMatch[1] : '';
+                        clickAction = `onclick="openVideoModal('youtube', '${ytId}')"`;
+                        platformLabel = '▶ YOUTUBE';
+                        platformColor = '#FF0000'; // Youtube 红
+                    } else if (displayLink.includes('xinpianchang.com')) {
+                        // 3. 识别新片场 (新片场防嵌套，必须用 a 标签开新网页)
+                        platformType = 'xinpianchang';
+                        cardTag = 'a';
+                        clickAction = `href="${displayLink}" target="_blank"`;
+                        platformLabel = '▶ XINPIANCHANG';
+                        platformColor = '#E74C3C'; // 新片场红
+                    } else if (displayLink.startsWith('http')) {
+                        // 4. 普通文章网址
+                        platformType = 'article';
+                        cardTag = 'a';
+                        clickAction = `href="${displayLink}" target="_blank"`;
+                        platformLabel = '📄 ARTICLE';
+                        platformColor = '#00D68F';
+                    }
+
+                    // --- 智能板块分发 ---
                     const tagUpper = (project.tags || '').toUpperCase();
                     const isTutorial = tagUpper.includes('TUTORIAL') || tagUpper.includes('教程');
 
                     if (isTutorial) {
                         tutorialCount++;
-                        let cardHtml = '';
-                        if (isArticle) {
-                            // 图文教程卡片 -> 点击新开网页
-                            cardHtml = `
-                                <a href="${displayLink}" target="_blank" class="tutorial-card">
-                                    <img src="${displayCover}" alt="${project.title}" class="tutorial-thumb" loading="lazy">
-                                    <div class="tutorial-info">
-                                        <h3 class="tutorial-title">${displayTitle}</h3>
-                                        <div class="tutorial-desc">${project.tags}</div>
-                                        <div class="tutorial-meta">
-                                            <span style="color: #00D68F;">📄 ARTICLE</span>
-                                            <span style="color: #555;">Read More</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            `;
-                        } else {
-                            // 视频教程卡片 -> 点击弹窗播放
-                            cardHtml = `
-                                <div class="tutorial-card" onclick="openVideoModal('${displayLink}')">
-                                    <img src="${displayCover}" alt="${project.title}" class="tutorial-thumb" loading="lazy">
-                                    <div class="tutorial-info">
-                                        <h3 class="tutorial-title">${displayTitle}</h3>
-                                        <div class="tutorial-desc">${project.tags}</div>
-                                        <div class="tutorial-meta">
-                                            <span style="color: var(--accent);">▶ VIDEO</span>
-                                            <span style="color: #555;">Bilibili</span>
-                                        </div>
+                        const cardHtml = `
+                            <${cardTag} ${clickAction} class="tutorial-card">
+                                <img src="${displayCover}" alt="${project.title}" class="tutorial-thumb" loading="lazy">
+                                <div class="tutorial-info">
+                                    <h3 class="tutorial-title">${displayTitle}</h3>
+                                    <div class="tutorial-desc">${project.tags}</div>
+                                    <div class="tutorial-meta">
+                                        <span style="color: ${platformColor};">${platformLabel}</span>
+                                        <span style="color: #555;">${cardTag === 'a' ? 'New Tab' : 'Video Modal'}</span>
                                     </div>
                                 </div>
-                            `;
-                        }
+                            </${cardTag}>
+                        `;
                         tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
                     } else {
                         workCount++;
-                        let cardHtml = '';
-                        if (isArticle) {
-                            // 普通作品（图文版）
-                            cardHtml = `
-                                <a href="${displayLink}" target="_blank" class="grid-item">
-                                    <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
-                                    <div class="item-overlay">
-                                        <div class="overlay-title">${displayTitle}</div>
-                                        <div class="overlay-tags">${project.tags}</div>
-                                        <div style="font-size: 14px; margin-top: 10px; color: #00D68F;">📄 READ ARTICLE</div>
-                                    </div>
-                                </a>
-                            `;
-                        } else {
-                            // 普通作品（视频版）
-                            cardHtml = `
-                                <div class="grid-item" onclick="openVideoModal('${displayLink}')">
-                                    <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
-                                    <div class="item-overlay">
-                                        <div class="overlay-title">${displayTitle}</div>
-                                        <div class="overlay-tags">${project.tags}</div>
-                                        <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
-                                    </div>
+                        const cardHtml = `
+                            <${cardTag} ${clickAction} class="grid-item">
+                                <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
+                                <div class="item-overlay">
+                                    <div class="overlay-title">${displayTitle}</div>
+                                    <div class="overlay-tags">${project.tags}</div>
+                                    <div style="font-size: 14px; margin-top: 10px; color: ${platformColor};">${platformLabel}</div>
                                 </div>
-                            `;
-                        }
+                            </${cardTag}>
+                        `;
                         workGrid.insertAdjacentHTML('beforeend', cardHtml);
                     }
                 });
@@ -406,14 +407,20 @@
             loadNotionProjects(); 
         });
 
-        function openVideoModal(bvid) {
+        // 升级版弹窗：支持 B站 和 YouTube
+        function openVideoModal(platform, vid) {
             document.getElementById('videoModal').style.display = 'flex';
-            const videoUrl = "https://player.bilibili.com/player.html?bvid=" + bvid + "&page=1&high_quality=1&danmaku=0";
-            document.getElementById('biliPlayer').src = videoUrl;
+            const iframe = document.getElementById('videoIframe');
+            if (platform === 'bilibili') {
+                iframe.src = "https://player.bilibili.com/player.html?bvid=" + vid + "&page=1&high_quality=1&danmaku=0";
+            } else if (platform === 'youtube') {
+                iframe.src = "https://www.youtube.com/embed/" + vid + "?autoplay=1&rel=0";
+            }
         }
+
         function closeVideoModal() {
             document.getElementById('videoModal').style.display = 'none';
-            document.getElementById('biliPlayer').src = "";
+            document.getElementById('videoIframe').src = "";
         }
     </script>
 
