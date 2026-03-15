@@ -272,26 +272,30 @@
 
         .global-footer { text-align: center; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; padding: 40px 0; width: 100%; }
 
-        /* ======== 全新交互：视频弹窗动效 ======== */
+        /* ======== 全新交互：视频弹窗丝滑阻尼动效 ======== */
         .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.98);
-            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(20px);
-            opacity: 0; transition: opacity 0.4s ease; /* 透明度渐变 */
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.92);
+            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(15px);
+            opacity: 0; transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* 透明度平滑过渡 */
         }
         .modal-overlay.show {
             opacity: 1;
         }
         .modal-content { 
-            width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; border: 1px solid #333; 
-            transform: scale(0.1); opacity: 0; /* 默认极小、透明 */
-            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease; /* 张力曲线动画 */
+            width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; 
+            border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            transform: scale(0.6); opacity: 0; /* 默认 0.6 倍大小，消除突兀爆发感 */
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; /* 苹果级高级阻尼减速曲线 */
         }
         .modal-overlay.show .modal-content {
             transform: scale(1); opacity: 1; /* 展开到完整比例 */
         }
-        .close-btn { position: absolute; top: -40px; right: 0; color: #FFD700; font-size: 30px; cursor: pointer; transition: color 0.3s; z-index: 1001; }
-        .close-btn:hover { color: #FFF; }
-        .modal-content iframe { width: 100%; height: 100%; border: none; }
+        .close-btn { 
+            position: absolute; top: -45px; right: 0; color: #FFF; font-size: 32px; 
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1001; opacity: 0.6; 
+        }
+        .close-btn:hover { color: var(--accent); opacity: 1; transform: scale(1.1); }
+        .modal-content iframe { width: 100%; height: 100%; border: none; display: block;}
 
         /* ================= 移动端专属极致响应式排版 ================= */
         @media (max-width: 768px) {
@@ -634,7 +638,7 @@
                         let platformColor = '#00D68F'; 
                         let btnTag = 'div'; 
 
-                        // 【重点】：将 event 传递给 openVideoModal
+                        // 将 event 传递给 openVideoModal
                         if (link.startsWith('BV')) {
                             clickAction = `onclick="openVideoModal(event, 'bilibili', '${link}')"`;
                             platformLabelZh = '▶ 哔哩哔哩';
@@ -756,7 +760,7 @@
             if(activeTab) updateIndicator(activeTab);
         });
 
-        // ======== 全新交互：从点击点缩放弹出的播放器 ========
+        // ======== 全新交互：从点击点丝滑缩放弹出的播放器 ========
         function openVideoModal(event, platform, vid) {
             const modalOverlay = document.getElementById('videoModal');
             const modalContent = document.querySelector('.modal-content');
@@ -800,11 +804,11 @@
             // 移除类名，触发缩放退回并渐渐变透明的 CSS 动画
             modalOverlay.classList.remove('show');
             
-            // 延迟清空并隐藏，等待 0.4 秒动画播放完毕
+            // 延迟清空并隐藏，等待 0.6 秒动画播放完毕 (必须与 CSS 中 transition 的 0.6s 同步)
             setTimeout(() => {
                 modalOverlay.style.display = 'none';
                 document.getElementById('videoIframe').src = "";
-            }, 400); 
+            }, 600); 
         }
     </script>
 
