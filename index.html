@@ -74,10 +74,9 @@
         }
 
         .grid-item {
-            position: relative; background-color: #222222; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer;
+            position: relative; background-color: #222222; aspect-ratio: 16 / 9; overflow: hidden;
             opacity: 0; 
             transform: translateY(20px);
-            text-decoration: none;
             display: block;
         }
 
@@ -100,7 +99,7 @@
 
         /* Tutorial 专属卡片排版 */
         .tutorial-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .tutorial-card { background-color: var(--card-dark); border: 1px solid #2A2A2A; border-radius: 6px; overflow: hidden; transition: all 0.3s; cursor: pointer; display: flex; flex-direction: column; text-decoration: none; opacity: 0; transform: translateY(20px); }
+        .tutorial-card { background-color: var(--card-dark); border: 1px solid #2A2A2A; border-radius: 6px; overflow: hidden; transition: all 0.3s; display: flex; flex-direction: column; opacity: 0; transform: translateY(20px); }
         .tutorial-card.animate-in { animation: slideUpFade 0.6s ease forwards; }
         .tutorial-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .tutorial-thumb { width: 100%; aspect-ratio: 16/9; background-color: #1a1a1a; object-fit: cover; border-bottom: 1px solid #2A2A2A; }
@@ -108,7 +107,26 @@
         .tutorial-title { font-size: 16px; font-weight: 600; margin: 0 0 10px 0; color: var(--text-main); line-height: 1.4; transition: color 0.3s;}
         .tutorial-card:hover .tutorial-title { color: var(--accent); }
         .tutorial-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; flex: 1; }
-        .tutorial-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        .tutorial-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: auto; }
+
+        /* 全新：平台按钮样式 */
+        .action-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+        .action-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: rgba(0,0,0,0.6);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 1px;
+        }
+        .action-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
 
         /* 工具排版 */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
@@ -274,7 +292,7 @@
             });
         }
 
-        // 终极形态：一套代码，智能识别全平台链接，智能分发板块
+        // 终极形态：支持多条链接的智能分发板块
         async function loadNotionProjects() {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
@@ -297,45 +315,49 @@
 
                 projects.forEach(project => {
                     let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>未读取到 CoverURL</text></svg>";
-                    let displayTitle = project.bvid ? project.title : ("⚠️ 链接读取失败 - " + project.title);
-                    let displayLink = project.bvid || ""; 
+                    
+                    const bvidStr = project.bvid || ""; 
+                    // 核心逻辑：按逗号或空格拆分出多个链接
+                    const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
+                    let displayTitle = links.length > 0 ? project.title : ("⚠️ 链接读取失败 - " + project.title);
 
-                    // --- 核心：智能平台解析器 ---
-                    let platformType = 'article';
-                    let clickAction = '';
-                    let platformLabel = '📄 ARTICLE';
-                    let platformColor = '#00D68F'; // 默认绿色
-                    let cardTag = 'div'; // 默认弹窗用 div，外链用 a
+                    // --- 遍历并生成所有按键 ---
+                    let actionButtonsHtml = '';
 
-                    if (displayLink.startsWith('BV')) {
-                        // 1. 识别 B 站
-                        platformType = 'bilibili';
-                        clickAction = `onclick="openVideoModal('bilibili', '${displayLink}')"`;
-                        platformLabel = '▶ BILIBILI';
-                        platformColor = 'var(--accent)';
-                    } else if (displayLink.includes('youtube.com') || displayLink.includes('youtu.be')) {
-                        // 2. 识别 YouTube (用正则提取出视频 ID)
-                        platformType = 'youtube';
-                        const ytMatch = displayLink.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                        const ytId = ytMatch ? ytMatch[1] : '';
-                        clickAction = `onclick="openVideoModal('youtube', '${ytId}')"`;
-                        platformLabel = '▶ YOUTUBE';
-                        platformColor = '#FF0000'; // Youtube 红
-                    } else if (displayLink.includes('xinpianchang.com')) {
-                        // 3. 识别新片场 (新片场防嵌套，必须用 a 标签开新网页)
-                        platformType = 'xinpianchang';
-                        cardTag = 'a';
-                        clickAction = `href="${displayLink}" target="_blank"`;
-                        platformLabel = '▶ XINPIANCHANG';
-                        platformColor = '#E74C3C'; // 新片场红
-                    } else if (displayLink.startsWith('http')) {
-                        // 4. 普通文章网址
-                        platformType = 'article';
-                        cardTag = 'a';
-                        clickAction = `href="${displayLink}" target="_blank"`;
-                        platformLabel = '📄 ARTICLE';
-                        platformColor = '#00D68F';
-                    }
+                    links.forEach(link => {
+                        let clickAction = '';
+                        let platformLabel = '📄 ARTICLE';
+                        let platformColor = '#00D68F'; // 默认绿色
+                        let btnTag = 'div'; // 默认弹窗用 div，外链用 a
+
+                        if (link.startsWith('BV')) {
+                            clickAction = `onclick="openVideoModal('bilibili', '${link}')"`;
+                            platformLabel = '▶ BILIBILI';
+                            platformColor = 'var(--accent)';
+                        } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
+                            const ytMatch = link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                            const ytId = ytMatch ? ytMatch[1] : '';
+                            clickAction = `onclick="openVideoModal('youtube', '${ytId}')"`;
+                            platformLabel = '▶ YOUTUBE';
+                            platformColor = '#FF0000';
+                        } else if (link.includes('xinpianchang.com')) {
+                            btnTag = 'a';
+                            clickAction = `href="${link}" target="_blank"`;
+                            platformLabel = '▶ XINPIANCHANG';
+                            platformColor = '#E74C3C'; 
+                        } else if (link.startsWith('http')) {
+                            btnTag = 'a';
+                            clickAction = `href="${link}" target="_blank"`;
+                            platformLabel = '📄 ARTICLE';
+                            platformColor = '#00D68F';
+                        }
+
+                        actionButtonsHtml += `
+                            <${btnTag} ${clickAction} class="action-btn" style="color: ${platformColor}; border-color: ${platformColor};">
+                                ${platformLabel}
+                            </${btnTag}>
+                        `;
+                    });
 
                     // --- 智能板块分发 ---
                     const tagUpper = (project.tags || '').toUpperCase();
@@ -344,30 +366,31 @@
                     if (isTutorial) {
                         tutorialCount++;
                         const cardHtml = `
-                            <${cardTag} ${clickAction} class="tutorial-card">
+                            <div class="tutorial-card">
                                 <img src="${displayCover}" alt="${project.title}" class="tutorial-thumb" loading="lazy">
                                 <div class="tutorial-info">
                                     <h3 class="tutorial-title">${displayTitle}</h3>
                                     <div class="tutorial-desc">${project.tags}</div>
                                     <div class="tutorial-meta">
-                                        <span style="color: ${platformColor};">${platformLabel}</span>
-                                        <span style="color: #555;">${cardTag === 'a' ? 'New Tab' : 'Video Modal'}</span>
+                                        ${actionButtonsHtml}
                                     </div>
                                 </div>
-                            </${cardTag}>
+                            </div>
                         `;
                         tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
                     } else {
                         workCount++;
                         const cardHtml = `
-                            <${cardTag} ${clickAction} class="grid-item">
+                            <div class="grid-item">
                                 <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
                                 <div class="item-overlay">
                                     <div class="overlay-title">${displayTitle}</div>
                                     <div class="overlay-tags">${project.tags}</div>
-                                    <div style="font-size: 14px; margin-top: 10px; color: ${platformColor};">${platformLabel}</div>
+                                    <div class="action-buttons">
+                                        ${actionButtonsHtml}
+                                    </div>
                                 </div>
-                            </${cardTag}>
+                            </div>
                         `;
                         workGrid.insertAdjacentHTML('beforeend', cardHtml);
                     }
