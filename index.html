@@ -325,7 +325,7 @@
             #videoModal .modal-content { width: 95%; }
             #resourceModal .modal-content { width: 95%; padding: 20px; max-height: 85vh; }
             
-            /* 手机端专用：优化弹窗关闭按钮的点击体验 (防边缘误触、增加玻璃底托) */
+            /* 手机端专用：优化弹窗关闭按钮的点击体验 (防边缘误触、增加玻璃底托、字符居中修复) */
             .close-btn { 
                 top: -54px; 
                 right: 4px; /* 留出安全边距 */
@@ -339,6 +339,8 @@
                 border-radius: 50%; 
                 opacity: 1; 
                 backdrop-filter: blur(4px);
+                padding-bottom: 4px; /* 修复乘号(x)在移动端因系统字体导致的基线偏下问题 */
+                box-sizing: border-box;
             }
         }
     </style>
@@ -999,6 +1001,17 @@
                     document.getElementById('nav-indicator').style.opacity = '1';
                 }
             }, 100);
+
+            // ======== 点击空白处自动关闭弹窗 ========
+            const videoModal = document.getElementById('videoModal');
+            videoModal.addEventListener('click', function(e) {
+                if (e.target === this) closeVideoModal();
+            });
+
+            const resourceModal = document.getElementById('resourceModal');
+            resourceModal.addEventListener('click', function(e) {
+                if (e.target === this) closeResModal();
+            });
         });
 
         window.addEventListener('resize', () => {
