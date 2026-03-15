@@ -14,7 +14,18 @@ export default async function handler(req, res) {
                 'Authorization': `Bearer ${NOTION_TOKEN}`,
                 'Notion-Version': '2022-06-28',
                 'Content-Type': 'application/json'
-            }
+            },
+            // --- 核心更新：加入排序逻辑 ---
+            body: JSON.stringify({
+                sorts: [
+                    {
+                        // 按照项目的创建时间 (created_time) 进行倒序排列 (descending)
+                        // 这样最新填入 Notion 的视频就会自动排在最前面
+                        timestamp: 'created_time',
+                        direction: 'descending'
+                    }
+                ]
+            })
         });
 
         if (!response.ok) {
