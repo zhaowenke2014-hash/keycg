@@ -105,6 +105,7 @@
         .overlay-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
         .overlay-tags { font-size: 14px; color: var(--accent); margin-bottom: 15px; }
 
+        /* 工具排版 */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
         .tool-box {
             background-color: var(--card-dark); padding: 40px; border: 1px solid #2A2A2A;
@@ -120,6 +121,7 @@
         }
         .btn-skeuomorphic:active { background: #FFCF00; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2); transform: translateY(1px); }
 
+        /* 极客终端窗口 */
         .terminal-window {
             background-color: var(--card-dark); border: 1px solid #2A2A2A; border-radius: 8px; overflow: hidden; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 40px;
@@ -144,6 +146,7 @@
         }
         @keyframes blink { from, to { background-color: transparent; } 50% { background-color: var(--accent); } }
         
+        /* INFO 排版 */
         .info-section {
             display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 80px; padding-bottom: 40px;
         }
@@ -209,8 +212,10 @@
         .contact-box a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: color 0.3s; margin: 0 5px; }
         .contact-box a:hover { color: var(--accent); }
 
+        /* 全局独立页脚 */
         .global-footer { text-align: center; font-size: 10px; color: #444444; letter-spacing: 2px; padding: 40px 0; width: 100%; }
 
+        /* 视频播放器弹窗 */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.98);
             z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(20px);
@@ -220,6 +225,7 @@
         .close-btn:hover { color: #FFF; }
         .modal-content iframe { width: 100%; height: 100%; border: none; }
 
+        /* 移动端响应式适配 */
         @media (max-width: 768px) {
             header { flex-direction: column; padding: 30px 20px; gap: 20px; }
             .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
@@ -255,11 +261,12 @@
     <div class="main-container">
         
         <div id="work" class="tab-content active">
-            <div class="section-divider">Latest Work from Bilibili</div>
+            <div class="section-divider">Selected Work (Motion & Stills)</div>
             
+            <!-- 这里变成了等待 Notion 数据的容器 -->
             <div class="work-grid" id="gallery-grid">
                 <div style="padding: 20px; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; text-align: center; letter-spacing: 2px;">
-                    SYNCING SECURE DATA FROM BILIBILI...
+                    SYNCING SECURE DATA FROM NOTION...
                 </div>
             </div>
 
@@ -359,49 +366,58 @@
             });
         }
 
-        // 终极突破：直接抓取 B 站数据！彻底抛弃手动录入
-        async function loadBilibiliProjects() {
+        // 核心突破：动态请求后端 API 并生成 HTML 模块
+        async function loadNotionProjects() {
             const grid = document.getElementById('gallery-grid');
             try {
-                // 判断当前是否在正式环境。如果是预览环境 (blob: 等) 则使用绝对路径，避免解析错误
-                const apiUrl = window.location.hostname.includes('keycg.cn') 
-                    ? '/api/bilibili' 
-                    : 'https://www.keycg.cn/api/bilibili';
-
-                // 请求 B 站抓取接口
-                const res = await fetch(apiUrl);
+                // 向我们刚刚搭建的 Vercel API 发送请求
+                const res = await fetch('/api/notion');
                 if (!res.ok) throw new Error('API Request Failed');
                 const projects = await res.json();
                 
-                grid.innerHTML = ''; 
+                grid.innerHTML = ''; // 数据拿到后，清空加载提示文字
 
+                // 如果表格是空的，给个优雅的提示
                 if (projects.length === 0) {
-                    grid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;">B站尚未发布作品或数据同步中...</div>';
+                    grid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;">Notion 数据库暂无作品。</div>';
                     return;
                 }
 
+                // 遍历表格里的每一行数据，生成对应的巨幕卡片
                 projects.forEach(project => {
-                    if (!project.bvid) return; 
+                    // 新增：可视化纠错机制。如果没有获取到对应字段，显示占位图和提示。
+                    let displayCover = project.coverUrl;
+                    let displayTitle = project.title;
+                    let displayBvid = project.bvid;
                     
-                    // 加入了防报错机制，如果B站封面加载失败会有备用图
+                    if (!project.coverUrl) {
+                        // 如果没读到封面链接，生成一张带有提示文字的黑色图片
+                        displayCover = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>未读取到 CoverURL，请检查 Notion 列名及属性类型</text></svg>";
+                    }
+                    if (!project.bvid) {
+                        displayTitle = "⚠️ BVID 读取失败 - " + project.title;
+                        displayBvid = ""; // 防止点击报错
+                    }
+
                     const html = `
-                        <div class="grid-item" onclick="openVideoModal('${project.bvid}')">
-                            <img src="${project.coverUrl}" alt="${project.title}" class="item-visual" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'700\\' height=\\'394\\'><rect width=\\'700\\' height=\\'394\\' fill=\\'%23222\\'/><text x=\\'50%\\' y=\\'50%\\' fill=\\'%23555\\' font-size=\\'18\\' font-family=\\'sans-serif\\' text-anchor=\\'middle\\' dy=\\'.3em\\'>IMAGE LOADING FAILED</text></svg>'">
+                        <div class="grid-item" onclick="openVideoModal('${displayBvid}')">
+                            <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
                             <div class="item-overlay">
-                                <div class="overlay-title">${project.title}</div>
+                                <div class="overlay-title">${displayTitle}</div>
                                 <div class="overlay-tags">${project.tags}</div>
                                 <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                             </div>
                         </div>
                     `;
+                    // 将生成的卡片依次塞进网格里
                     grid.insertAdjacentHTML('beforeend', html);
                 });
                 
+                // 卡片全部塞进去之后，立刻触发渐显动画
                 animateGalleryItems();
             } catch (error) {
                 console.error(error);
-                // 即使跨域失败，也能捕获错误并优雅展示在页面上
-                grid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;">正在配置数据流，请在正式上线域名 (keycg.cn) 中查看效果。</div>';
+                grid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;">读取数据库失败，请检查 Vercel 环境变量配置。</div>';
             }
         }
 
@@ -419,14 +435,15 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // 切换回 work 面板时，重新播放渐显动画
             if(tabId === 'work') {
                 animateGalleryItems();
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // 加载完成后直接调用 B 站抓取函数
-            loadBilibiliProjects(); 
+            // 网页加载完成的第一时间，直接调用函数去请求 Notion 数据
+            loadNotionProjects(); 
         });
 
         function openVideoModal(bvid) {
