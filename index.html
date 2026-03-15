@@ -193,7 +193,6 @@
         .tutorial-info { padding: 25px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center;}
         .tutorial-title { font-size: 16px; font-weight: 600; margin: 0 0 10px 0; color: var(--text-main); line-height: 1.4; transition: color 0.3s;}
         .tutorial-card:hover .tutorial-title { color: var(--accent); }
-        .tutorial-desc { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.6; }
 
         .action-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
         .action-btn {
@@ -273,13 +272,24 @@
 
         .global-footer { text-align: center; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; padding: 40px 0; width: 100%; }
 
-        /* 视频播放器弹窗 (始终保持黑色沉浸感) */
+        /* ======== 全新交互：视频弹窗动效 ======== */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.98);
             z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(20px);
+            opacity: 0; transition: opacity 0.4s ease; /* 透明度渐变 */
         }
-        .modal-content { width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; border: 1px solid #333; }
-        .close-btn { position: absolute; top: -40px; right: 0; color: #FFD700; font-size: 30px; cursor: pointer; transition: color 0.3s; }
+        .modal-overlay.show {
+            opacity: 1;
+        }
+        .modal-content { 
+            width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; border: 1px solid #333; 
+            transform: scale(0.1); opacity: 0; /* 默认极小、透明 */
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease; /* 张力曲线动画 */
+        }
+        .modal-overlay.show .modal-content {
+            transform: scale(1); opacity: 1; /* 展开到完整比例 */
+        }
+        .close-btn { position: absolute; top: -40px; right: 0; color: #FFD700; font-size: 30px; cursor: pointer; transition: color 0.3s; z-index: 1001; }
         .close-btn:hover { color: #FFF; }
         .modal-content iframe { width: 100%; height: 100%; border: none; }
 
@@ -517,14 +527,10 @@
         let isLightMode = false;
 
         function initTheme() {
-            // 1. 获取访客本地时间，如果处于早 7:00 ~ 晚 18:00
             const hour = new Date().getHours();
             const isDayTime = hour >= 7 && hour < 18;
-            
-            // 2. 检查操作系统是否配置了浅色模式 (苹果、Win11 会自动根据日出日落调节此设置)
             const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
 
-            // 优先遵循系统设置，如果系统没设置，再根据时钟强行判断
             if (prefersLight || isDayTime) {
                 isLightMode = true;
             }
@@ -539,10 +545,10 @@
         function applyTheme() {
             if (isLightMode) {
                 document.body.classList.add('light-mode');
-                document.getElementById('theme-icon').innerText = '🌙'; // 白天模式下显示月亮，代表点击可切换到黑夜
+                document.getElementById('theme-icon').innerText = '🌙'; 
             } else {
                 document.body.classList.remove('light-mode');
-                document.getElementById('theme-icon').innerText = '☀️'; // 黑夜模式下显示太阳，代表点击可切换到白天
+                document.getElementById('theme-icon').innerText = '☀️'; 
             }
         }
 
@@ -607,17 +613,14 @@
                 projects.forEach(project => {
                     let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>";
                     
-                    // --- 全新：智能中英双语解析标题 ---
                     const rawTitle = project.title || '未命名作品';
-                    // 用竖线 | 或斜杠 / 把标题切分为中英文两部分
                     const titleParts = rawTitle.split(/[|｜/]/); 
                     const titleZh = titleParts[0].trim();
-                    const titleEn = titleParts.length > 1 ? titleParts[1].trim() : titleZh; // 如果没写英文，默认使用中文占位
+                    const titleEn = titleParts.length > 1 ? titleParts[1].trim() : titleZh; 
 
                     const bvidStr = project.bvid || ""; 
                     const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
                     
-                    // 根据是否提取到链接，组装最终显示的动态 HTML 标题
                     let displayTitleHtml = links.length > 0 
                         ? `<span data-zh>${titleZh}</span><span data-en>${titleEn}</span>` 
                         : `<span data-zh>⚠️ 链接读取失败 - ${titleZh}</span><span data-en>⚠️ Link Read Failed - ${titleEn}</span>`;
@@ -631,15 +634,16 @@
                         let platformColor = '#00D68F'; 
                         let btnTag = 'div'; 
 
+                        // 【重点】：将 event 传递给 openVideoModal
                         if (link.startsWith('BV')) {
-                            clickAction = `onclick="openVideoModal('bilibili', '${link}')"`;
+                            clickAction = `onclick="openVideoModal(event, 'bilibili', '${link}')"`;
                             platformLabelZh = '▶ 哔哩哔哩';
                             platformLabelEn = '▶ BILIBILI';
-                            platformColor = '#00A1D6'; // 经典的 B 站创作中心蓝
+                            platformColor = '#00A1D6'; 
                         } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
                             const ytMatch = link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                             const ytId = ytMatch ? ytMatch[1] : '';
-                            clickAction = `onclick="openVideoModal('youtube', '${ytId}')"`;
+                            clickAction = `onclick="openVideoModal(event, 'youtube', '${ytId}')"`;
                             platformLabelZh = '▶ 油管';
                             platformLabelEn = '▶ YOUTUBE';
                             platformColor = '#FF3333'; 
@@ -735,7 +739,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initTheme(); // 页面加载时立刻测算当地时间或操作系统设置并应用主题
+            initTheme(); 
             loadNotionProjects(); 
             
             setTimeout(() => {
@@ -752,19 +756,55 @@
             if(activeTab) updateIndicator(activeTab);
         });
 
-        function openVideoModal(platform, vid) {
-            document.getElementById('videoModal').style.display = 'flex';
+        // ======== 全新交互：从点击点缩放弹出的播放器 ========
+        function openVideoModal(event, platform, vid) {
+            const modalOverlay = document.getElementById('videoModal');
+            const modalContent = document.querySelector('.modal-content');
             const iframe = document.getElementById('videoIframe');
+
+            // 计算点击时的坐标，作为缩放弹出的中心点 (transform-origin)
+            if (event && event.currentTarget) {
+                const rect = event.currentTarget.getBoundingClientRect();
+                const clickX = rect.left + rect.width / 2;
+                const clickY = rect.top + rect.height / 2;
+                
+                // 将坐标转换为相对于浏览器视口的百分比
+                const originX = (clickX / window.innerWidth) * 100;
+                const originY = (clickY / window.innerHeight) * 100;
+                
+                modalContent.style.transformOrigin = `${originX}% ${originY}%`;
+            } else {
+                // 回退方案：默认居中弹出
+                modalContent.style.transformOrigin = 'center center';
+            }
+
+            // 先将外层设置 display: flex 以便占用空间，但此时透明度 opacity 依然是 0
+            modalOverlay.style.display = 'flex';
+            
+            // 触发浏览器重绘重排 (Reflow)，以确保后续添加 .show 类时 transition 能够生效
+            void modalOverlay.offsetWidth;
+
             if (platform === 'bilibili') {
                 iframe.src = "https://player.bilibili.com/player.html?bvid=" + vid + "&page=1&high_quality=1&danmaku=0";
             } else if (platform === 'youtube') {
                 iframe.src = "https://www.youtube.com/embed/" + vid + "?autoplay=1&rel=0";
             }
+
+            // 添加类名，通过 CSS 动画将弹窗缩放至 100%，并将透明度变为 1
+            modalOverlay.classList.add('show');
         }
 
         function closeVideoModal() {
-            document.getElementById('videoModal').style.display = 'none';
-            document.getElementById('videoIframe').src = "";
+            const modalOverlay = document.getElementById('videoModal');
+            
+            // 移除类名，触发缩放退回并渐渐变透明的 CSS 动画
+            modalOverlay.classList.remove('show');
+            
+            // 延迟清空并隐藏，等待 0.4 秒动画播放完毕
+            setTimeout(() => {
+                modalOverlay.style.display = 'none';
+                document.getElementById('videoIframe').src = "";
+            }, 400); 
         }
     </script>
 
