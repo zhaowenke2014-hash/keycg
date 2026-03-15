@@ -272,7 +272,7 @@
 
         .global-footer { text-align: center; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; padding: 40px 0; width: 100%; }
 
-        /* ======== 全新交互：视频弹窗丝滑阻尼动效 ======== */
+        /* ======== 全新交互：视频弹窗丝滑阻尼动效 (修复关闭按钮丢失) ======== */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.92);
             z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(15px);
@@ -281,21 +281,29 @@
         .modal-overlay.show {
             opacity: 1;
         }
+        
+        /* .modal-content 负责响应缩放动画，但不隐藏溢出 */
         .modal-content { 
-            width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; background-color: #000; position: relative; 
-            border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            width: 85%; max-width: 1200px; aspect-ratio: 16 / 9; position: relative; 
             transform: scale(0.6); opacity: 0; /* 默认 0.6 倍大小，消除突兀爆发感 */
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; /* 苹果级高级阻尼减速曲线 */
         }
         .modal-overlay.show .modal-content {
             transform: scale(1); opacity: 1; /* 展开到完整比例 */
         }
+        
+        /* 内部包装器负责圆角、阴影和隐藏溢出内容，保护 iframe 边界 */
+        .modal-video-wrapper {
+            width: 100%; height: 100%; background-color: #000; border: 1px solid #333; 
+            border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        
         .close-btn { 
             position: absolute; top: -45px; right: 0; color: #FFF; font-size: 32px; 
             cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1001; opacity: 0.6; 
         }
         .close-btn:hover { color: var(--accent); opacity: 1; transform: scale(1.1); }
-        .modal-content iframe { width: 100%; height: 100%; border: none; display: block;}
+        .modal-video-wrapper iframe { width: 100%; height: 100%; border: none; display: block;}
 
         /* ================= 移动端专属极致响应式排版 ================= */
         @media (max-width: 768px) {
@@ -518,11 +526,13 @@
         © 2026 KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span>. ALL RIGHTS RESERVED.
     </footer>
 
-    <!-- 弹窗播放器 -->
+    <!-- 弹窗播放器 (嵌套结构调整) -->
     <div class="modal-overlay" id="videoModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeVideoModal()">&times;</span>
-            <iframe id="videoIframe" src="" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+            <div class="modal-video-wrapper">
+                <iframe id="videoIframe" src="" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+            </div>
         </div>
     </div>
 
