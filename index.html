@@ -588,7 +588,7 @@
                             clickAction = `onclick="openVideoModal('bilibili', '${link}')"`;
                             platformLabelZh = '▶ 哔哩哔哩';
                             platformLabelEn = '▶ BILIBILI';
-                            platformColor = 'var(--accent)';
+                            platformColor = '#00A1D6'; // 经典的 B 站创作中心蓝
                         } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
                             const ytMatch = link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                             const ytId = ytMatch ? ytMatch[1] : '';
