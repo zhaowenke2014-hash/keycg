@@ -385,14 +385,25 @@
 
                 // 遍历表格里的每一行数据，生成对应的巨幕卡片
                 projects.forEach(project => {
-                    // 容错：如果这一行的视频 BVID 或者封面没填，就自动跳过不显示
-                    if (!project.bvid || !project.coverUrl) return; 
+                    // 新增：可视化纠错机制。如果没有获取到对应字段，显示占位图和提示。
+                    let displayCover = project.coverUrl;
+                    let displayTitle = project.title;
+                    let displayBvid = project.bvid;
                     
+                    if (!project.coverUrl) {
+                        // 如果没读到封面链接，生成一张带有提示文字的黑色图片
+                        displayCover = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>未读取到 CoverURL，请检查 Notion 列名及属性类型</text></svg>";
+                    }
+                    if (!project.bvid) {
+                        displayTitle = "⚠️ BVID 读取失败 - " + project.title;
+                        displayBvid = ""; // 防止点击报错
+                    }
+
                     const html = `
-                        <div class="grid-item" onclick="openVideoModal('${project.bvid}')">
-                            <img src="${project.coverUrl}" alt="${project.title}" class="item-visual" loading="lazy">
+                        <div class="grid-item" onclick="openVideoModal('${displayBvid}')">
+                            <img src="${displayCover}" alt="${project.title}" class="item-visual" loading="lazy">
                             <div class="item-overlay">
-                                <div class="overlay-title">${project.title}</div>
+                                <div class="overlay-title">${displayTitle}</div>
                                 <div class="overlay-tags">${project.tags}</div>
                                 <div style="font-size: 14px; margin-top: 10px; color: var(--accent);">▶ PLAY VIDEO</div>
                             </div>
