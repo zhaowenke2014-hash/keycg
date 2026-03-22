@@ -171,7 +171,8 @@
         .grid-item.animate-in { animation: slideUpFade 0.6s ease forwards; }
         @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
-        .item-visual { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
+        .item-visual { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease, opacity 0.8s ease; display: block; opacity: 0; }
+        .item-visual.img-loaded { opacity: 1; }
         .item-overlay {
             position: absolute; inset: 0; background: var(--overlay-bg); color: var(--text-main);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -189,7 +190,8 @@
         .tutorial-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
         
         .tutorial-thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--border-color); }
-        .tutorial-thumb { width: 100%; height: 100%; background-color: var(--item-bg-alt); object-fit: cover; transition: transform 0.5s ease; }
+        .tutorial-thumb { width: 100%; height: 100%; background-color: var(--item-bg-alt); object-fit: cover; transition: transform 0.5s ease, opacity 0.8s ease; opacity: 0; }
+        .tutorial-thumb.img-loaded { opacity: 1; }
         .tutorial-card:hover .tutorial-thumb { transform: scale(1.05); }
         
         .tutorial-hover-overlay {
@@ -1061,7 +1063,7 @@
                         const cardHtml = `
                             <div class="tutorial-card">
                                 <div class="tutorial-thumb-container">
-                                    <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy">
+                                    <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                                     <div class="tutorial-hover-overlay">
                                         ${actionButtonsHtml}
                                     </div>
@@ -1076,7 +1078,7 @@
                         workCount++;
                         const cardHtml = `
                             <div class="grid-item">
-                                <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy">
+                                <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                                 <div class="item-overlay">
                                     <div class="overlay-title">${displayTitleHtml}</div>
                                     <div class="overlay-tags">${project.tags}</div>
