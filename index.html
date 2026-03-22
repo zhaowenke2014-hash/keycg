@@ -375,6 +375,11 @@
             .resource-link { padding: 8px 0; font-size: 13px; }
             .resource-link::after { display: none; } /* 隐藏移动端多余箭头 */
             .resource-link span { padding-left: 10px; font-size: 12px; }
+            
+            /* 消除手机端特有的点击后“粘性 Hover”导致的黄色持续高亮 */
+            .resource-link:hover { color: var(--text-muted); transform: none; }
+            .resource-link:hover span { opacity: 0.65; }
+
             .resource-more-btn { margin-top: 10px; padding: 8px; }
             
             .tool-box { padding: 25px; }
@@ -383,10 +388,10 @@
             
             #videoModal .modal-content { width: 95%; }
             
-            /* 优化手机端画中画弹窗：恢复居中圆角卡片设计，尺寸适中 */
+            /* 优化手机端画中画弹窗：恢复居中圆角卡片设计，尺寸适中，进一步收窄两边宽度 */
             #resourceModal .modal-content { 
-                width: 88%; 
-                max-width: 380px;
+                width: 80%; /* 从 88% 收窄为 80%，增加两边的呼吸感 */
+                max-width: 360px; /* 微调收紧最大宽度 */
                 padding: 20px; 
                 max-height: 72vh; 
                 border-radius: 12px; 
