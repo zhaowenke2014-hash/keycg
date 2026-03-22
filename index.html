@@ -442,30 +442,58 @@
                 max-height: 72vh; 
                 border-radius: 12px; 
                 border: 1px solid var(--border-color);
+                position: relative; /* 核心新增：为内嵌的关闭按钮提供定位基准 */
             }
+            
+            #resourceModal .res-modal-header {
+                padding-right: 35px; /* 给右侧内嵌的关闭按钮让出空间，防止标题过长时重叠 */
+            }
+            
             #resourceModal .res-modal-list .resource-link { padding: 10px 0; }
             #resourceModal .res-modal-list .resource-link span { font-size: 12px; }
             
-            /* 手机端专用：优化弹窗关闭按钮的点击体验 */
-            .close-btn { 
-                top: -38px; /* 位置进一步往下移，更贴近卡片主体 */
-                right: 0px; 
-                width: 36px; /* 适当缩小，比例更精致适中 */
-                height: 36px; 
-                background-color: rgba(255, 255, 255, 0.15); /* 保留玻璃底托质感 */
+            /* 手机端专用：将宝藏弹窗的关闭按钮优雅地内嵌到卡片右上角 */
+            #resourceModal .close-btn { 
+                top: 14px; 
+                right: 14px; 
+                width: 30px; 
+                height: 30px; 
+                background-color: var(--item-bg); /* 使用次级背景色，融入卡片 */
                 border-radius: 50%; 
                 opacity: 1 !important; 
                 padding: 0; 
-                color: #FFF !important; /* 防止移动端粘性 Hover 导致图标意外变色 */
-                /* 移除 all，指定具体的动画属性，强制开启硬件加速，彻底解决 iOS 弹窗打开时的渲染抖动 */
+                color: var(--text-muted) !important; /* 图标变为柔和的灰色 */
+                transition: all 0.2s ease; 
+                transform: translateZ(0); 
+                border: 1px solid transparent;
+            }
+            #resourceModal .close-btn svg { width: 15px; height: 15px; transition: none; }
+            #resourceModal .close-btn:hover { transform: translateZ(0); } /* 彻底禁用移动端悬停位移 */
+            #resourceModal .close-btn:active { 
+                background-color: var(--border-color); /* 按下时背景加深 */
+                color: var(--text-main) !important; /* 按下时图标高亮 */
+                transform: scale(0.85) translateZ(0); /* 增加 Q 弹的按压反馈 */
+            }
+            
+            /* 视频弹窗的关闭按钮：保持悬浮在外部，避免遮挡视频内容 */
+            #videoModal .close-btn { 
+                top: -38px; 
+                right: 0px; 
+                width: 36px; 
+                height: 36px; 
+                background-color: rgba(255, 255, 255, 0.15);
+                border-radius: 50%; 
+                opacity: 1 !important; 
+                padding: 0; 
+                color: #FFF !important;
                 transition: background-color 0.2s ease, transform 0.2s ease; 
                 transform: translateZ(0); 
             }
-            .close-btn svg { width: 18px; height: 18px; transition: none; }
-            .close-btn:hover { transform: translateZ(0); } /* 彻底禁用移动端悬停位移 */
-            .close-btn:active { 
+            #videoModal .close-btn svg { width: 18px; height: 18px; transition: none; }
+            #videoModal .close-btn:hover { transform: translateZ(0); }
+            #videoModal .close-btn:active { 
                 background-color: rgba(255, 255, 255, 0.25); 
-                transform: scale(0.92) translateZ(0); /* 增加极其丝滑的物理按压缩放反馈 */
+                transform: scale(0.92) translateZ(0); 
             }
         }
     </style>
@@ -537,7 +565,7 @@
                 <span data-en>Tutorials & Breakdowns</span>
             </div>
             <div class="tutorial-grid" id="tutorial-grid">
-                <!-- 全新：带有个性化俏文案的加载动画 -->
+                <!-- 全新：带有个性化俏皮文案的加载动画 -->
                 <div class="loading-container">
                     <div class="spinner"></div>
                     <div class="loading-text">
