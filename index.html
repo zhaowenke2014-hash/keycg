@@ -347,8 +347,18 @@
             .controls-group { position: absolute; top: 25px; right: 20px; margin-left: 0; gap: 8px; }
             .nav-links { width: 100%; display: flex; justify-content: space-between; gap: 0; }
             .nav-links a { margin-left: 0; font-size: 13px; padding-bottom: 8px; }
-            .main-container { padding: 0 20px 20px 20px; }
-            .work-grid, .tutorial-grid, .tool-grid, .resource-grid { grid-template-columns: 1fr; }
+            .main-container { padding: 0 15px 20px 15px; }
+            
+            /* 手机端作品区专属：横向双列排版 */
+            .work-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+            
+            /* 缩小双列状态下的悬浮文字与按钮，防止拥挤溢出 */
+            .work-grid .item-overlay { padding: 10px; }
+            .work-grid .overlay-title { font-size: 13px; margin-bottom: 4px; }
+            .work-grid .overlay-tags { font-size: 9px; margin-bottom: 8px; }
+            .work-grid .action-btn { padding: 6px 10px; font-size: 10px; }
+            
+            .tutorial-grid, .tool-grid, .resource-grid { grid-template-columns: 1fr; }
             .tool-box { padding: 25px; }
             .slogan-en { font-size: 24px; }
             .info-section { padding-top: 40px; }
