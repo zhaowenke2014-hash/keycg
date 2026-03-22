@@ -349,7 +349,7 @@
             .header-right { width: 100%; flex-direction: column; gap: 0; }
             .controls-group { position: absolute; top: 20px; right: 15px; margin-left: 0; gap: 8px; }
             
-            /* ======== 核心修复：方案A - 导航栏等分布局与隐形触控区放大 ======== */
+            /* ======== 核心修复：方案A - 中文导航栏等分布局与隐形触控区放大 ======== */
             .nav-links { width: 100%; display: flex; justify-content: space-between; gap: 0; }
             .nav-links a { 
                 margin-left: 0; 
@@ -358,6 +358,27 @@
                 flex: 1; /* 让 5 个菜单完美等分 100% 的宽度 */
                 text-align: center; /* 文本居中对齐 */
                 -webkit-tap-highlight-color: transparent; /* 消除点击时的自带灰色高亮块，更显高级 */
+                white-space: nowrap; /* 防止任何情况下文字被意外折行 */
+            }
+
+            /* ======== 新增：移动端【英文模式】专属导航栏优化 ======== */
+            /* 英文单词较长且长短不一，强制等分会导致粘连。切换到英文时，自动变为原生 App 级别的横向滑动式导航 */
+            body.en-mode .nav-links {
+                justify-content: flex-start; /* 英文较长，取消强制等分，改为左对齐依次排列 */
+                overflow-x: auto; /* 超出屏幕宽度时允许平滑横向滑动 */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; /* 开启 iOS 硬件级丝滑滚动 */
+                gap: 5px; /* 菜单之间的间隙 */
+                padding-bottom: 2px; /* 给下方滑动指示器留出一点冗余高度 */
+            }
+            body.en-mode .nav-links::-webkit-scrollbar {
+                display: none; /* 隐藏原生滚动条，保持高级清爽的观感 */
+            }
+            body.en-mode .nav-links a {
+                flex: 0 0 auto; /* 取消弹性等分挤压，由文字本身宽度自然撑开 */
+                font-size: 13px; /* 英文采用稍微缩小一点、更加精致紧凑的字号 */
+                padding: 12px 12px 10px 12px; /* 左右增加呼吸感内边距，方便点按 */
+                letter-spacing: 0.5px;
             }
             
             .main-container { padding: 0 15px 20px 15px; }
@@ -1013,7 +1034,15 @@
             
             setTimeout(() => {
                 const activeTab = document.querySelector('.nav-links a.active');
-                if(activeTab) updateIndicator(activeTab);
+                if(activeTab) {
+                    updateIndicator(activeTab);
+                    // 如果在英文移动端，切换语言后也自动滚动居中当前Tab
+                    if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+                        const navLinks = document.querySelector('.nav-links');
+                        const scrollLeft = activeTab.offsetLeft - (navLinks.offsetWidth / 2) + (activeTab.offsetWidth / 2);
+                        navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                    }
+                }
             }, 50);
         }
 
@@ -1202,6 +1231,13 @@
             
             updateIndicator(activeTabBtn);
             
+            // 新增：英文移动端由于采用横向滑动，点击时自动将元素平滑居中
+            if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+                const navLinks = document.querySelector('.nav-links');
+                const scrollLeft = activeTabBtn.offsetLeft - (navLinks.offsetWidth / 2) + (activeTabBtn.offsetWidth / 2);
+                navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            }
+
             // --- 核心更新：修复切换 Tab 时的顿挫感 ---
             // 取消由于 DOM 高度剧变导致的 smooth 平滑滚动冲突，改为瞬间置顶
             window.scrollTo(0, 0);
