@@ -368,7 +368,7 @@
                     <span data-zh>教程</span><span data-en>TUTORIAL</span>
                 </a>
                 <a onclick="switchTab('nav')" id="tab-nav">
-                    <span data-zh>导航</span><span data-en>LINKS</span>
+                    <span data-zh>宝藏</span><span data-en>TREASURES</span>
                 </a>
                 <a onclick="switchTab('info')" id="tab-info">
                     <span data-zh>关于</span><span data-en>INFO</span>
@@ -929,8 +929,11 @@
                         let platformColor = '#00D68F'; 
                         let btnTag = 'div'; 
 
-                        if (link.startsWith('BV')) {
-                            clickAction = `onclick="openVideoModal(event, 'bilibili', '${link}')"`;
+                        // 智能识别扩展：支持 B站(弹窗)、YouTube(弹窗)、以及各大主流平台(新标签页)
+                        if (link.startsWith('BV') || link.includes('bilibili.com/video/BV')) {
+                            const bvidMatch = link.match(/(BV[a-zA-Z0-9]+)/);
+                            const vid = bvidMatch ? bvidMatch[1] : link;
+                            clickAction = `onclick="openVideoModal(event, 'bilibili', '${vid}')"`;
                             platformLabelZh = '▶ 哔哩哔哩';
                             platformLabelEn = '▶ BILIBILI';
                             platformColor = '#00A1D6'; 
@@ -942,11 +945,28 @@
                             platformLabelEn = '▶ YOUTUBE';
                             platformColor = '#FF3333'; 
                         } else if (link.includes('xinpianchang.com')) {
-                            btnTag = 'a';
-                            clickAction = `href="${link}" target="_blank"`;
-                            platformLabelZh = '▶ 新片场';
-                            platformLabelEn = '▶ XINPIANCHANG';
-                            platformColor = '#E74C3C'; 
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 新片场'; platformLabelEn = '▶ XINPIANCHANG'; platformColor = '#E74C3C'; 
+                        } else if (link.includes('douyin.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 抖音'; platformLabelEn = '▶ DOUYIN'; platformColor = '#FE2C55'; 
+                        } else if (link.includes('kuaishou.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 快手'; platformLabelEn = '▶ KUAISHOU'; platformColor = '#FF6900'; 
+                        } else if (link.includes('xiaohongshu.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 小红书'; platformLabelEn = '▶ XIAOHONGSHU'; platformColor = '#FF2442'; 
+                        } else if (link.includes('vimeo.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ Vimeo'; platformLabelEn = '▶ VIMEO'; platformColor = '#1AB7EA'; 
+                        } else if (link.includes('v.qq.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 腾讯视频'; platformLabelEn = '▶ TENCENT'; platformColor = '#FF5E00'; 
+                        } else if (link.includes('iqiyi.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 爱奇艺'; platformLabelEn = '▶ IQIYI'; platformColor = '#00CC33'; 
+                        } else if (link.includes('youku.com')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 优酷'; platformLabelEn = '▶ YOUKU'; platformColor = '#00A1EA'; 
+                        } else if (link.includes('bilibili.com')) {
+                            // 针对 B站 动态、空间等非视频页面的后备方案
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 哔哩哔哩'; platformLabelEn = '▶ BILIBILI'; platformColor = '#00A1D6'; 
+                        } else if (link.includes('behance.net')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' Behance'; platformLabelEn = ' BEHANCE'; platformColor = '#1769FF'; 
+                        } else if (link.includes('zcool.com.cn')) {
+                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' 站酷'; platformLabelEn = ' ZCOOL'; platformColor = '#D4A300'; 
                         } else if (link.startsWith('http')) {
                             btnTag = 'a';
                             clickAction = `href="${link}" target="_blank"`;
