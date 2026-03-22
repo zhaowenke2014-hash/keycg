@@ -383,33 +383,31 @@
             
             #videoModal .modal-content { width: 95%; }
             
-            /* 优化手机端画中画弹窗：贴边显示，高度最大化，紧凑阅读 */
-            #resourceModal { align-items: flex-end; } /* 弹窗靠屏幕底部 */
+            /* 优化手机端画中画弹窗：恢复居中圆角卡片设计，尺寸适中 */
             #resourceModal .modal-content { 
-                width: 100%; 
-                max-width: none;
-                padding: 20px 20px 30px 20px; 
-                max-height: 95vh; 
-                border-radius: 16px 16px 0 0; /* 仅保留顶部圆角，类似 iOS 抽屉 */
-                border: none;
-                border-top: 1px solid var(--border-color);
+                width: 88%; 
+                max-width: 380px;
+                padding: 20px; 
+                max-height: 72vh; 
+                border-radius: 12px; 
+                border: 1px solid var(--border-color);
             }
             #resourceModal .res-modal-list .resource-link { padding: 10px 0; }
             #resourceModal .res-modal-list .resource-link span { font-size: 12px; }
             
             /* 手机端专用：优化弹窗关闭按钮的点击体验 (防边缘误触、增加玻璃底托) */
             .close-btn { 
-                top: -54px; 
-                right: 8px; /* 留出安全边距 */
-                width: 44px; /* 满足 Apple 最小点击热区标准 */
-                height: 44px; 
+                top: -52px; 
+                right: 0px; 
+                width: 42px; 
+                height: 42px; 
                 background-color: rgba(255, 255, 255, 0.15); /* 毛玻璃圆形底托 */
                 border-radius: 50%; 
                 opacity: 1; 
                 backdrop-filter: blur(4px);
                 padding: 0; /* 移除基线补偿，SVG 天生居中 */
             }
-            .close-btn svg { width: 24px; height: 24px; }
+            .close-btn svg { width: 22px; height: 22px; }
         }
     </style>
     <script src="/_vercel/insights/script.js"></script>
