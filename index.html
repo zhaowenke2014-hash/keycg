@@ -346,6 +346,7 @@
             .close-btn svg { width: 24px; height: 24px; }
         }
     </style>
+    <script src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -874,15 +875,19 @@
             }
         }
 
-        function animateGalleryItems() {
-            const items = document.querySelectorAll('.grid-item, .tutorial-card');
+        // --- 核心更新：修复动画延迟造成的闪烁感 ---
+        function animateGalleryItems(tabId = null) {
+            let container = document;
+            if (tabId) {
+                container = document.getElementById(tabId);
+            }
+            const items = container.querySelectorAll('.grid-item, .tutorial-card');
             items.forEach((item, index) => {
                 item.classList.remove('animate-in');
-                item.style.animationDelay = '0s';
-                setTimeout(() => {
-                    item.style.animationDelay = `${index * 0.1}s`;
-                    item.classList.add('animate-in');
-                }, 50);
+                // 魔法代码：强制浏览器重排重绘，取代 setTimeout，实现无缝瞬间重置动画
+                void item.offsetWidth; 
+                item.style.animationDelay = `${index * 0.08}s`;
+                item.classList.add('animate-in');
             });
         }
 
@@ -1019,6 +1024,7 @@
                 if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
                 if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
 
+                // 初次加载时，触发全局动画计算
                 animateGalleryItems();
             } catch (error) {
                 console.error(error);
@@ -1045,10 +1051,13 @@
             
             updateIndicator(activeTabBtn);
             
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // --- 核心更新：修复切换 Tab 时的顿挫感 ---
+            // 取消由于 DOM 高度剧变导致的 smooth 平滑滚动冲突，改为瞬间置顶
+            window.scrollTo(0, 0);
 
+            // 仅对当前活跃的 tab 进行无缝级联动画，避免渲染卡顿
             if(tabId === 'work' || tabId === 'tutorial') {
-                animateGalleryItems();
+                animateGalleryItems(tabId);
             }
         }
 
@@ -1064,7 +1073,7 @@
                 }
             }, 100);
 
-            // ======== 点击空白处自动关闭弹窗 (保留这套高级逻辑) ========
+            // ======== 点击空白处自动关闭弹窗 ========
             const videoModal = document.getElementById('videoModal');
             videoModal.addEventListener('click', function(e) {
                 if (e.target === this) closeVideoModal();
@@ -1119,7 +1128,7 @@
             }, 600); 
         }
 
-        // ======== 全新：资源列表画中画弹窗交互 ========
+        // ======== 资源列表画中画弹窗交互 ========
         function openResModal(event, btnElement) {
             const modalOverlay = document.getElementById('resourceModal');
             const modalContent = modalOverlay.querySelector('.modal-content');
