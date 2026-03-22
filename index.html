@@ -404,22 +404,24 @@
             
             /* 手机端专用：优化弹窗关闭按钮的点击体验 */
             .close-btn { 
-                top: -46px; /* 下调位置，更加贴近卡片主体 */
+                top: -38px; /* 位置进一步往下移，更贴近卡片主体 */
                 right: 0px; 
                 width: 36px; /* 适当缩小，比例更精致适中 */
                 height: 36px; 
                 background-color: rgba(255, 255, 255, 0.15); /* 保留玻璃底托质感 */
                 border-radius: 50%; 
                 opacity: 1 !important; 
-                /* 移除 backdrop-filter，彻底修复 iOS/Safari 弹窗缩放动画期间子元素变黑闪烁的渲染 Bug */
                 padding: 0; 
                 color: #FFF !important; /* 防止移动端粘性 Hover 导致图标意外变色 */
+                /* 移除 all，指定具体的动画属性，强制开启硬件加速，彻底解决 iOS 弹窗打开时的渲染抖动 */
+                transition: background-color 0.2s ease, transform 0.2s ease; 
+                transform: translateZ(0); 
             }
             .close-btn svg { width: 18px; height: 18px; transition: none; }
-            .close-btn:hover { transform: none; } /* 禁用 PC 端的悬停位移 */
+            .close-btn:hover { transform: translateZ(0); } /* 彻底禁用移动端悬停位移 */
             .close-btn:active { 
                 background-color: rgba(255, 255, 255, 0.25); 
-                transform: scale(0.92); /* 增加极其丝滑的物理按压缩放反馈 */
+                transform: scale(0.92) translateZ(0); /* 增加极其丝滑的物理按压缩放反馈 */
             }
         }
     </style>
@@ -478,7 +480,7 @@
                 <div class="loading-container">
                     <div class="spinner"></div>
                     <div class="loading-text">
-                        <span data-zh>再渲染了，莫催莫催~</span>
+                        <span data-zh>在渲染了，莫催莫催~</span>
                         <span data-en>Rendering, don't rush me~</span>
                     </div>
                 </div>
@@ -495,7 +497,7 @@
                 <div class="loading-container">
                     <div class="spinner"></div>
                     <div class="loading-text">
-                        <span data-zh>再渲染了，莫催莫催~</span>
+                        <span data-zh>在渲染了，莫催莫催~</span>
                         <span data-en>Rendering, don't rush me~</span>
                     </div>
                 </div>
