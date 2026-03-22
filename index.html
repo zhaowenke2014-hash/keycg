@@ -349,16 +349,20 @@
             .nav-links a { margin-left: 0; font-size: 13px; padding-bottom: 8px; }
             .main-container { padding: 0 15px 20px 15px; }
             
-            /* 手机端作品区专属：横向双列排版 */
-            .work-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+            /* 手机端作品与教程区专属：横向双列排版 */
+            .work-grid, .tutorial-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
             
             /* 缩小双列状态下的悬浮文字与按钮，防止拥挤溢出 */
-            .work-grid .item-overlay { padding: 10px; }
+            .work-grid .item-overlay, .tutorial-grid .tutorial-hover-overlay { padding: 10px; }
             .work-grid .overlay-title { font-size: 13px; margin-bottom: 4px; }
             .work-grid .overlay-tags { font-size: 9px; margin-bottom: 8px; }
-            .work-grid .action-btn { padding: 6px 10px; font-size: 10px; }
+            .work-grid .action-btn, .tutorial-grid .action-btn { padding: 6px 10px; font-size: 10px; }
             
-            .tutorial-grid, .tool-grid, .resource-grid { grid-template-columns: 1fr; }
+            /* 教程卡片内部文字区缩小 */
+            .tutorial-grid .tutorial-info { padding: 10px 8px; }
+            .tutorial-grid .tutorial-title { font-size: 12px; margin: 0; line-height: 1.3; }
+            
+            .tool-grid, .resource-grid { grid-template-columns: 1fr; }
             .tool-box { padding: 25px; }
             .slogan-en { font-size: 24px; }
             .info-section { padding-top: 40px; }
