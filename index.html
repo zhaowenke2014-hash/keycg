@@ -228,12 +228,30 @@
         .resource-list .resource-link:nth-child(n+5) { display: none; }
 
         .resource-link {
-            display: flex; align-items: center; justify-content: space-between; color: var(--text-muted);
+            display: flex; align-items: center; color: var(--text-muted);
             text-decoration: none; font-size: 14px; padding: 12px 0; border-bottom: 1px dashed var(--border-color); transition: all 0.3s;
         }
         .resource-list .resource-link:last-child { border-bottom: none; padding-bottom: 0; }
-        .resource-link::after { content: '↗'; font-size: 12px; opacity: 0; transform: translateX(-5px); transition: all 0.3s; }
+        
+        /* 核心修复：简介统一右对齐，视觉更清爽 */
+        .resource-link span {
+            margin-left: auto; /* 利用弹性盒子将文字推向最右侧 */
+            text-align: right;
+            opacity: 0.65; /* 降低副标题亮度，拉开主次层级 */
+            font-size: 13px;
+            padding-left: 15px; /* 防止标题过长时文字粘连 */
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            transition: all 0.3s;
+        }
+
+        .resource-link::after { 
+            content: '↗'; font-size: 12px; opacity: 0; transform: translateX(-5px); transition: all 0.3s; 
+            margin-left: 8px; flex-shrink: 0; 
+        }
         .resource-link:hover { color: var(--accent); transform: translateX(5px); }
+        .resource-link:hover span { opacity: 0.9; } /* 鼠标悬停时提亮简介文字 */
         .resource-link:hover::after { opacity: 1; transform: translateX(0); }
 
         .resource-more-btn {
