@@ -217,7 +217,9 @@
         .resource-category {
             background-color: var(--card-dark); border: 1px solid var(--border-color); border-radius: 6px; padding: 25px;
             transition: border-color 0.3s; display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(20px); /* 动画初始状态 */
         }
+        .resource-category.animate-in { animation: slideUpFade 0.6s ease forwards; } /* 卡片动画类 */
         .resource-category:hover { border-color: var(--accent); }
         .category-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         
@@ -242,7 +244,10 @@
 
         /* 工具排版 */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
-        .tool-box { background-color: var(--card-dark); padding: 40px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.3s;}
+        .tool-box { background-color: var(--card-dark); padding: 40px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.3s;
+            opacity: 0; transform: translateY(20px); /* 动画初始状态 */
+        }
+        .tool-box.animate-in { animation: slideUpFade 0.6s ease forwards; } /* 卡片动画类 */
         .tool-title { font-size: 20px; font-weight: 700; margin: 0 0 15px 0; color: var(--text-main); }
         .tool-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px; }
         .btn-skeuomorphic {
@@ -882,7 +887,7 @@
             if (tabId) {
                 container = document.getElementById(tabId);
             }
-            const items = container.querySelectorAll('.grid-item, .tutorial-card');
+            const items = container.querySelectorAll('.grid-item, .tutorial-card, .resource-category, .tool-box');
             items.forEach((item, index) => {
                 item.classList.remove('animate-in');
                 // 魔法代码：强制浏览器重排重绘，取代 setTimeout，实现无缝瞬间重置动画
@@ -1057,7 +1062,7 @@
             window.scrollTo(0, 0);
 
             // 仅对当前活跃的 tab 进行无缝级联动画，避免渲染卡顿
-            if(tabId === 'work' || tabId === 'tutorial') {
+            if(tabId === 'work' || tabId === 'tutorial' || tabId === 'nav' || tabId === 'tools') {
                 animateGalleryItems(tabId);
             }
         }
