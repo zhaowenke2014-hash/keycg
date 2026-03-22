@@ -342,7 +342,7 @@
         @media (max-width: 768px) {
             /* 调整顶部导航栏区域高度，使其更紧凑 */
             header { padding: 20px 15px 10px 15px; flex-direction: column; align-items: flex-start; gap: 20px; }
-            .logo { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 6px; line-height: 1.2; }
+            .logo { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 6px; line-height: 1.2; touch-action: manipulation; user-select: none; }
             .logo-name { font-size: 22px; }
             .logo-divider { display: none; } 
             .logo-title { font-size: 12px; color: var(--text-muted); font-weight: normal; letter-spacing: 1px; }
@@ -359,10 +359,14 @@
                 text-align: center; /* 文本居中对齐 */
                 -webkit-tap-highlight-color: transparent; /* 消除点击时的自带灰色高亮块，更显高级 */
                 white-space: nowrap; /* 防止任何情况下文字被意外折行 */
+                touch-action: manipulation; /* 终极修复一：禁用双击缩放判定，让浏览器立即触发点击，消除 300ms 延迟 */
+                user-select: none; /* 终极修复二：防止手指轻微滑动时变成“选中文字”而导致点击失效 */
+            }
+            .nav-links a span {
+                pointer-events: none; /* 终极修复三：事件穿透，确保手指点在文字上时，事件完美穿透并由 a 标签 100% 接收 */
             }
             
-            /* 核心修复：彻底解决移动端（尤其是 iOS）需要点击两次才能跳转的 Bug */
-            /* 强制抹除移动端的 Hover 状态，让 Safari 直接触发 Click 事件，实现一触即发 */
+            /* 彻底解决移动端（尤其是 iOS）因为 Hover 状态导致的拦截双击 Bug */
             .nav-links a:hover { color: var(--text-muted); }
             .nav-links a.active:hover { color: var(--text-main); }
 
