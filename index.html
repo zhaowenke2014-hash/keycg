@@ -45,6 +45,7 @@
             flex-direction: column;
             min-height: 100vh; 
             transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-y: scroll; /* 强制显示垂直滚动条，避免切换短页面时由于滚动条消失导致的导航栏跳动 */
         }
 
         /* 核心：双语显示拦截逻辑 */
@@ -1073,7 +1074,7 @@
                 }
             }, 100);
 
-            // ======== 点击空白处自动关闭弹窗 ========
+            // ======== 点击空白处自动关闭弹窗 (保留这套高级逻辑) ========
             const videoModal = document.getElementById('videoModal');
             videoModal.addEventListener('click', function(e) {
                 if (e.target === this) closeVideoModal();
