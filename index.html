@@ -338,16 +338,20 @@
 
         /* ================= 移动端专属极致响应式排版 ================= */
         @media (max-width: 768px) {
-            header { padding: 25px 20px 20px 20px; flex-direction: column; align-items: flex-start; gap: 25px; }
+            /* 调整顶部导航栏区域高度，使其更紧凑 */
+            header { padding: 20px 15px 10px 15px; flex-direction: column; align-items: flex-start; gap: 20px; }
             .logo { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 6px; line-height: 1.2; }
             .logo-name { font-size: 22px; }
             .logo-divider { display: none; } 
             .logo-title { font-size: 12px; color: var(--text-muted); font-weight: normal; letter-spacing: 1px; }
             .header-right { width: 100%; flex-direction: column; gap: 0; }
-            .controls-group { position: absolute; top: 25px; right: 20px; margin-left: 0; gap: 8px; }
+            .controls-group { position: absolute; top: 20px; right: 15px; margin-left: 0; gap: 8px; }
             .nav-links { width: 100%; display: flex; justify-content: space-between; gap: 0; }
             .nav-links a { margin-left: 0; font-size: 13px; padding-bottom: 8px; }
             .main-container { padding: 0 15px 20px 15px; }
+
+            /* 核心修复：缩小移动端各模块标题上下的间距，提升屏幕空间利用率 */
+            .section-divider { margin: 5px 0 15px 0; }
             
             /* 手机端作品与教程区专属：横向双列排版 */
             .work-grid, .tutorial-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
