@@ -402,19 +402,25 @@
             #resourceModal .res-modal-list .resource-link { padding: 10px 0; }
             #resourceModal .res-modal-list .resource-link span { font-size: 12px; }
             
-            /* 手机端专用：优化弹窗关闭按钮的点击体验 (防边缘误触、增加玻璃底托) */
+            /* 手机端专用：优化弹窗关闭按钮的点击体验 */
             .close-btn { 
-                top: -52px; 
+                top: -46px; /* 下调位置，更加贴近卡片主体 */
                 right: 0px; 
-                width: 42px; 
-                height: 42px; 
-                background-color: rgba(255, 255, 255, 0.15); /* 毛玻璃圆形底托 */
+                width: 36px; /* 适当缩小，比例更精致适中 */
+                height: 36px; 
+                background-color: rgba(255, 255, 255, 0.15); /* 保留玻璃底托质感 */
                 border-radius: 50%; 
-                opacity: 1; 
-                backdrop-filter: blur(4px);
-                padding: 0; /* 移除基线补偿，SVG 天生居中 */
+                opacity: 1 !important; 
+                /* 移除 backdrop-filter，彻底修复 iOS/Safari 弹窗缩放动画期间子元素变黑闪烁的渲染 Bug */
+                padding: 0; 
+                color: #FFF !important; /* 防止移动端粘性 Hover 导致图标意外变色 */
             }
-            .close-btn svg { width: 22px; height: 22px; }
+            .close-btn svg { width: 18px; height: 18px; transition: none; }
+            .close-btn:hover { transform: none; } /* 禁用 PC 端的悬停位移 */
+            .close-btn:active { 
+                background-color: rgba(255, 255, 255, 0.25); 
+                transform: scale(0.92); /* 增加极其丝滑的物理按压缩放反馈 */
+            }
         }
     </style>
     <script src="/_vercel/insights/script.js"></script>
