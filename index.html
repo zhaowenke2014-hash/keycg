@@ -360,6 +360,11 @@
                 -webkit-tap-highlight-color: transparent; /* 消除点击时的自带灰色高亮块，更显高级 */
                 white-space: nowrap; /* 防止任何情况下文字被意外折行 */
             }
+            
+            /* 核心修复：彻底解决移动端（尤其是 iOS）需要点击两次才能跳转的 Bug */
+            /* 强制抹除移动端的 Hover 状态，让 Safari 直接触发 Click 事件，实现一触即发 */
+            .nav-links a:hover { color: var(--text-muted); }
+            .nav-links a.active:hover { color: var(--text-main); }
 
             /* ======== 新增：移动端【英文模式】专属导航栏优化 ======== */
             /* 英文单词较长且长短不一，强制等分会导致粘连。切换到英文时，自动变为原生 App 级别的横向滑动式导航 */
