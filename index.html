@@ -203,6 +203,13 @@
         /* 核心修复：使用 translate3d 强制保留 GPU 渲染层 */
         @keyframes slideUpFade { to { opacity: 1; transform: translate3d(0, 0, 0); } }
 
+        /* 新增：角标发光呼吸动画 */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(255, 51, 102, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 15px rgba(255, 51, 102, 0.8); transform: scale(1.05); }
+            100% { box-shadow: 0 0 5px rgba(255, 51, 102, 0.5); transform: scale(1); }
+        }
+
         .item-visual { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease, opacity 0.8s ease; display: block; opacity: 0; }
         .item-visual.img-loaded { opacity: 1; }
         .item-overlay {
