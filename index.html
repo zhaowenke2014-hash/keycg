@@ -99,6 +99,13 @@
         .nav-links a:hover { color: var(--text-main); }
         .nav-links a.active { color: var(--text-main); } 
 
+        /* 核心终极修复：给内层文字穿上“隐身斗篷”，让鼠标事件完全穿透，彻底杜绝 I 形光标 */
+        .nav-links a span {
+            user-select: none;
+            -webkit-user-select: none;
+            pointer-events: none; 
+        }
+
         .nav-indicator {
             position: absolute;
             height: 2px;
