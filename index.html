@@ -313,11 +313,19 @@
 
         /* 工具排版 */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
-        .tool-box { background-color: var(--card-dark); padding: 40px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.3s;
+        .tool-box { background-color: var(--card-dark); padding: 40px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;
             opacity: 0; transform: translate3d(0, 20px, 0); /* 动画初始状态 */
             -webkit-backface-visibility: hidden; backface-visibility: hidden; will-change: opacity, transform;
         }
         .tool-box.animate-in { animation: slideUpFade 0.6s ease forwards; } /* 卡片动画类 */
+        
+        /* 新增：工具模块的光影悬浮效果 */
+        .tool-box:hover { 
+            transform: translate3d(0, -6px, 0); 
+            border-color: var(--accent); 
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 0 15px rgba(255, 215, 0, 0.1); 
+        }
+        
         .tool-title { 
             font-size: 20px; font-weight: 700; margin: 0 0 15px 0; color: var(--text-main); 
             /* 核心修复：防止工具标题出现文本光标 */
