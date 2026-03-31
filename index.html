@@ -1281,40 +1281,40 @@
                         btnTag = 'a';
                         clickAction = `href="${link}" target="_blank"`;
                     }
-
-                    actionButtonsHtml += `
-                        <${btnTag} ${clickAction} class="action-btn" style="--btn-color: ${platformColor};">
-                            <span data-zh>${platformLabelZh}</span><span data-en>${platformLabelEn}</span>
-                        </${btnTag}>
-                    `;
-                });
-
-                const tagUpper = (project.tags || '').toUpperCase();
-                const isTutorial = tagUpper.includes('TUTORIAL') || tagUpper.includes('教程');
-
-                if (isTutorial) {
-                    tutorialCount++;
-                    const cardHtml = `
-                        <div class="tutorial-card">
-                            <div class="tutorial-thumb-container">
-                                <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
-                                <div class="tutorial-hover-overlay">
-                                    ${actionButtonsHtml}
+                    if (isTutorial) {
+                        tutorialCount++;
+                        const cardHtml = `
+                            <div class="tutorial-card">
+                                <div class="tutorial-thumb-container">
+                                    <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                    <div class="tutorial-hover-overlay">
+                                        ${actionButtonsHtml}
+                                    </div>
+                                </div>
+                                <div class="tutorial-info">
+                                    <h3 class="tutorial-title">${displayTitleHtml}</h3>
                                 </div>
                             </div>
-                            <div class="tutorial-info">
-                                <h3 class="tutorial-title">${displayTitleHtml}</h3>
+                        `;
+                        tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
+                    } else {
+                        workCount++;
+                        const cardHtml = `
+                            <div class="grid-item">
+                                <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                <div class="item-overlay">
+                                    <div class="overlay-title">${displayTitleHtml}</div>
+                                    <div class="overlay-tags">${project.tags}</div>
+                                    <div class="action-buttons">
+                                        ${actionButtonsHtml}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                    tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
-                } else {
-                    workCount++;
-                    const cardHtml = `
-                        <div class="grid-item">
-                            <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
-                            <div class="item-overlay">
-                                <div class="overlay-title">${displayTitleHtml}</div>
+                        `;
+                        workGrid.insertAdjacentHTML('beforeend', cardHtml);
+                    }
+                });
+
                 if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
                 if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
 
@@ -1327,8 +1327,8 @@
                 }
 
             } catch (error) {
-                console.error(error);
-                workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，请检查正式环境下的 Vercel 配置。</span><span data-en>Failed to load database, please check Vercel config.</span></div>';
+                console.error('API Error:', error);
+                workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，如果是本地预览请忽略此错误。</span><span data-en>Failed to load database.</span></div>';
                 tutorialGrid.innerHTML = '';
             }
         }
