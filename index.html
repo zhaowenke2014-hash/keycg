@@ -83,7 +83,12 @@
 
         .header-right { display: flex; align-items: center; }
 
-        .nav-links { position: relative; }
+        .nav-links { 
+            position: relative; 
+            /* 核心修复：防止点击导航栏中间缝隙时出现文本输入光标 */
+            user-select: none;
+            -webkit-user-select: none;
+        }
         .nav-links a {
             cursor: pointer; 
             color: var(--text-muted); 
