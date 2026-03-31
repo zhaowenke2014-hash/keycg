@@ -70,6 +70,9 @@
             text-align: center; 
             cursor: pointer; 
             transition: opacity 0.3s;
+            /* 核心修复：防止点击 Logo 时出现输入光标 */
+            user-select: none; 
+            -webkit-user-select: none;
         }
         .logo:hover { opacity: 0.8; }
 
@@ -83,6 +86,10 @@
             transition: color 0.3s; 
             padding-bottom: 5px;
             display: inline-block; 
+            /* 核心修复：防止点击导航栏时出现闪烁的文本输入光标 (I-beam) */
+            user-select: none; 
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .nav-links a:hover { color: var(--text-main); }
         .nav-links a.active { color: var(--text-main); } 
@@ -1100,143 +1107,163 @@
         async function loadNotionProjects() {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
+            let projects = [];
 
             try {
-                const apiUrl = window.location.hostname.includes('keycg.cn') 
-                    ? '/api/notion' 
-                    : 'https://www.keycg.cn/api/notion';
+                const isProd = window.location.hostname.includes('keycg.cn');
+                const apiUrl = isProd ? '/api/notion' : 'https://www.keycg.cn/api/notion';
 
                 const res = await fetch(apiUrl);
                 if (!res.ok) throw new Error('API Request Failed');
-                const projects = await res.json();
-                
-                workGrid.innerHTML = ''; 
-                tutorialGrid.innerHTML = '';
-
-                let workCount = 0;
-                let tutorialCount = 0;
-
-                projects.forEach(project => {
-                    let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>";
-                    
-                    const rawTitle = project.title || '未命名作品';
-                    const titleParts = rawTitle.split(/[|｜/]/); 
-                    const titleZh = titleParts[0].trim();
-                    const titleEn = titleParts.length > 1 ? titleParts[1].trim() : titleZh; 
-
-                    const bvidStr = project.bvid || ""; 
-                    const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
-                    
-                    let displayTitleHtml = links.length > 0 
-                        ? `<span data-zh>${titleZh}</span><span data-en>${titleEn}</span>` 
-                        : `<span data-zh>⚠️ 链接读取失败 - ${titleZh}</span><span data-en>⚠️ Link Read Failed - ${titleEn}</span>`;
-
-                    let actionButtonsHtml = '';
-
-                    links.forEach(link => {
-                        let clickAction = '';
-                        let platformLabelZh = '📄 图文';
-                        let platformLabelEn = '📄 ARTICLE';
-                        let platformColor = '#00D68F'; 
-                        let btnTag = 'div'; 
-
-                        // 智能识别扩展：支持 B站(弹窗)、YouTube(弹窗)、以及各大主流平台(新标签页)
-                        if (link.startsWith('BV') || link.includes('bilibili.com/video/BV')) {
-                            const bvidMatch = link.match(/(BV[a-zA-Z0-9]+)/);
-                            const vid = bvidMatch ? bvidMatch[1] : link;
-                            clickAction = `onclick="openVideoModal(event, 'bilibili', '${vid}')"`;
-                            platformLabelZh = '▶ 哔哩哔哩';
-                            platformLabelEn = '▶ BILIBILI';
-                            platformColor = '#00A1D6'; 
-                        } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
-                            const ytMatch = link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                            const ytId = ytMatch ? ytMatch[1] : '';
-                            clickAction = `onclick="openVideoModal(event, 'youtube', '${ytId}')"`;
-                            platformLabelZh = '▶ 油管';
-                            platformLabelEn = '▶ YOUTUBE';
-                            platformColor = '#FF3333'; 
-                        } else if (link.includes('xinpianchang.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 新片场'; platformLabelEn = '▶ XINPIANCHANG'; platformColor = '#E74C3C'; 
-                        } else if (link.includes('douyin.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 抖音'; platformLabelEn = '▶ DOUYIN'; platformColor = '#FE2C55'; 
-                        } else if (link.includes('kuaishou.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 快手'; platformLabelEn = '▶ KUAISHOU'; platformColor = '#FF6900'; 
-                        } else if (link.includes('xiaohongshu.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 小红书'; platformLabelEn = '▶ XIAOHONGSHU'; platformColor = '#FF2442'; 
-                        } else if (link.includes('vimeo.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ Vimeo'; platformLabelEn = '▶ VIMEO'; platformColor = '#1AB7EA'; 
-                        } else if (link.includes('v.qq.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 腾讯视频'; platformLabelEn = '▶ TENCENT'; platformColor = '#FF5E00'; 
-                        } else if (link.includes('iqiyi.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 爱奇艺'; platformLabelEn = '▶ IQIYI'; platformColor = '#00CC33'; 
-                        } else if (link.includes('youku.com')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 优酷'; platformLabelEn = '▶ YOUKU'; platformColor = '#00A1EA'; 
-                        } else if (link.includes('bilibili.com')) {
-                            // 针对 B站 动态、空间等非视频页面的后备方案
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 哔哩哔哩'; platformLabelEn = '▶ BILIBILI'; platformColor = '#00A1D6'; 
-                        } else if (link.includes('behance.net')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' Behance'; platformLabelEn = ' BEHANCE'; platformColor = '#1769FF'; 
-                        } else if (link.includes('zcool.com.cn')) {
-                            btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' 站酷'; platformLabelEn = ' ZCOOL'; platformColor = '#D4A300'; 
-                        } else if (link.startsWith('http')) {
-                            btnTag = 'a';
-                            clickAction = `href="${link}" target="_blank"`;
+                projects = await res.json();
+            } catch (error) {
+                console.warn('跨域或网络请求失败，若是预览环境属于正常现象：', error);
+                if (!window.location.hostname.includes('keycg.cn')) {
+                    // 非正式环境遇到错误时，加载演示数据以供预览
+                    projects = [
+                        {
+                            title: "C4D自制【人文成都】片头 | Motion Design",
+                            coverUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+                            bvid: "https://www.bilibili.com/video/BV1xx411c7mD",
+                            tags: "MOTION / C4D & MG"
+                        },
+                        {
+                            title: "如何用C4D制作建筑生长动画 | C4D Tutorial",
+                            coverUrl: "https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=800&auto=format&fit=crop",
+                            bvid: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                            tags: "TUTORIAL"
                         }
+                    ];
+                } else {
+                    // 正式环境遇到错误，显示提示信息
+                    workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，请检查正式环境下的 Vercel 配置。</span><span data-en>Failed to load database, please check Vercel config.</span></div>';
+                    tutorialGrid.innerHTML = '';
+                    return;
+                }
+            }
 
-                        actionButtonsHtml += `
-                            <${btnTag} ${clickAction} class="action-btn" style="--btn-color: ${platformColor};">
-                                <span data-zh>${platformLabelZh}</span><span data-en>${platformLabelEn}</span>
-                            </${btnTag}>
-                        `;
-                    });
+            workGrid.innerHTML = ''; 
+            tutorialGrid.innerHTML = '';
 
-                    const tagUpper = (project.tags || '').toUpperCase();
-                    const isTutorial = tagUpper.includes('TUTORIAL') || tagUpper.includes('教程');
+            let workCount = 0;
+            let tutorialCount = 0;
 
-                    if (isTutorial) {
-                        tutorialCount++;
-                        const cardHtml = `
-                            <div class="tutorial-card">
-                                <div class="tutorial-thumb-container">
-                                    <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
-                                    <div class="tutorial-hover-overlay">
-                                        ${actionButtonsHtml}
-                                    </div>
-                                </div>
-                                <div class="tutorial-info">
-                                    <h3 class="tutorial-title">${displayTitleHtml}</h3>
-                                </div>
-                            </div>
-                        `;
-                        tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
-                    } else {
-                        workCount++;
-                        const cardHtml = `
-                            <div class="grid-item">
-                                <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
-                                <div class="item-overlay">
-                                    <div class="overlay-title">${displayTitleHtml}</div>
-                                    <div class="overlay-tags">${project.tags}</div>
-                                    <div class="action-buttons">
-                                        ${actionButtonsHtml}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        workGrid.insertAdjacentHTML('beforeend', cardHtml);
+            projects.forEach(project => {
+                let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>";
+                
+                const rawTitle = project.title || '未命名作品';
+                const titleParts = rawTitle.split(/[|｜/]/); 
+                const titleZh = titleParts[0].trim();
+                const titleEn = titleParts.length > 1 ? titleParts[1].trim() : titleZh; 
+
+                const bvidStr = project.bvid || ""; 
+                const links = bvidStr.split(/[,，\s]+/).filter(l => l.trim() !== '');
+                
+                let displayTitleHtml = links.length > 0 
+                    ? `<span data-zh>${titleZh}</span><span data-en>${titleEn}</span>` 
+                    : `<span data-zh>⚠️ 链接读取失败 - ${titleZh}</span><span data-en>⚠️ Link Read Failed - ${titleEn}</span>`;
+
+                let actionButtonsHtml = '';
+
+                links.forEach(link => {
+                    let clickAction = '';
+                    let platformLabelZh = '📄 图文';
+                    let platformLabelEn = '📄 ARTICLE';
+                    let platformColor = '#00D68F'; 
+                    let btnTag = 'div'; 
+
+                    // 智能识别扩展：支持 B站(弹窗)、YouTube(弹窗)、以及各大主流平台(新标签页)
+                    if (link.startsWith('BV') || link.includes('bilibili.com/video/BV')) {
+                        const bvidMatch = link.match(/(BV[a-zA-Z0-9]+)/);
+                        const vid = bvidMatch ? bvidMatch[1] : link;
+                        clickAction = `onclick="openVideoModal(event, 'bilibili', '${vid}')"`;
+                        platformLabelZh = '▶ 哔哩哔哩';
+                        platformLabelEn = '▶ BILIBILI';
+                        platformColor = '#00A1D6'; 
+                    } else if (link.includes('youtube.com') || link.includes('youtu.be')) {
+                        const ytMatch = link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                        const ytId = ytMatch ? ytMatch[1] : '';
+                        clickAction = `onclick="openVideoModal(event, 'youtube', '${ytId}')"`;
+                        platformLabelZh = '▶ 油管';
+                        platformLabelEn = '▶ YOUTUBE';
+                        platformColor = '#FF3333'; 
+                    } else if (link.includes('xinpianchang.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 新片场'; platformLabelEn = '▶ XINPIANCHANG'; platformColor = '#E74C3C'; 
+                    } else if (link.includes('douyin.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 抖音'; platformLabelEn = '▶ DOUYIN'; platformColor = '#FE2C55'; 
+                    } else if (link.includes('kuaishou.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 快手'; platformLabelEn = '▶ KUAISHOU'; platformColor = '#FF6900'; 
+                    } else if (link.includes('xiaohongshu.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 小红书'; platformLabelEn = '▶ XIAOHONGSHU'; platformColor = '#FF2442'; 
+                    } else if (link.includes('vimeo.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ Vimeo'; platformLabelEn = '▶ VIMEO'; platformColor = '#1AB7EA'; 
+                    } else if (link.includes('v.qq.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 腾讯视频'; platformLabelEn = '▶ TENCENT'; platformColor = '#FF5E00'; 
+                    } else if (link.includes('iqiyi.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 爱奇艺'; platformLabelEn = '▶ IQIYI'; platformColor = '#00CC33'; 
+                    } else if (link.includes('youku.com')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 优酷'; platformLabelEn = '▶ YOUKU'; platformColor = '#00A1EA'; 
+                    } else if (link.includes('bilibili.com')) {
+                        // 针对 B站 动态、空间等非视频页面的后备方案
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = '▶ 哔哩哔哩'; platformLabelEn = '▶ BILIBILI'; platformColor = '#00A1D6'; 
+                    } else if (link.includes('behance.net')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' Behance'; platformLabelEn = ' BEHANCE'; platformColor = '#1769FF'; 
+                    } else if (link.includes('zcool.com.cn')) {
+                        btnTag = 'a'; clickAction = `href="${link}" target="_blank"`; platformLabelZh = ' 站酷'; platformLabelEn = ' ZCOOL'; platformColor = '#D4A300'; 
+                    } else if (link.startsWith('http')) {
+                        btnTag = 'a';
+                        clickAction = `href="${link}" target="_blank"`;
                     }
+
+                    actionButtonsHtml += `
+                        <${btnTag} ${clickAction} class="action-btn" style="--btn-color: ${platformColor};">
+                            <span data-zh>${platformLabelZh}</span><span data-en>${platformLabelEn}</span>
+                        </${btnTag}>
+                    `;
                 });
 
-                if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
-                if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
+                const tagUpper = (project.tags || '').toUpperCase();
+                const isTutorial = tagUpper.includes('TUTORIAL') || tagUpper.includes('教程');
 
-                // 初次加载时，触发全局动画计算
-                animateGalleryItems();
-            } catch (error) {
-                console.error(error);
-                workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，请检查正式环境下的 Vercel 配置。</span><span data-en>Failed to load database, please check Vercel config.</span></div>';
-                tutorialGrid.innerHTML = '';
-            }
+                if (isTutorial) {
+                    tutorialCount++;
+                    const cardHtml = `
+                        <div class="tutorial-card">
+                            <div class="tutorial-thumb-container">
+                                <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                <div class="tutorial-hover-overlay">
+                                    ${actionButtonsHtml}
+                                </div>
+                            </div>
+                            <div class="tutorial-info">
+                                <h3 class="tutorial-title">${displayTitleHtml}</h3>
+                            </div>
+                        </div>
+                    `;
+                    tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
+                } else {
+                    workCount++;
+                    const cardHtml = `
+                        <div class="grid-item">
+                            <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                            <div class="item-overlay">
+                                <div class="overlay-title">${displayTitleHtml}</div>
+                                <div class="overlay-tags">${project.tags}</div>
+                                <div class="action-buttons">
+                                    ${actionButtonsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    workGrid.insertAdjacentHTML('beforeend', cardHtml);
+                }
+            });
+
+            if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
+            if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
+
+            // 初次加载时，触发全局动画计算
+            animateGalleryItems();
         }
 
         // --- 加入 isInitialLoad 参数，判断是否为初次加载 ---
