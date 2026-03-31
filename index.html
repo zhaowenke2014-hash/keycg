@@ -340,6 +340,31 @@
         }
         .btn-skeuomorphic:active { background: #FFCF00; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2); transform: translateY(1px); }
 
+        /* 新增：捐赠卡片专属排版 */
+        .donation-box {
+            grid-column: 1 / -1; /* 横跨整行，作为底部横幅 */
+            flex-direction: row;
+            align-items: center;
+            gap: 50px;
+            background: linear-gradient(135deg, var(--item-bg-alt), var(--card-dark));
+        }
+        .donation-text { flex: 1; }
+        .donation-qr {
+            width: 180px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+        .donation-box:hover .donation-qr { transform: scale(1.05); }
+        .donation-qr img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         /* INFO 排版 */
         .info-section { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 80px; padding-bottom: 40px; }
         .slogan-box { max-width: 800px; margin-bottom: 30px; opacity: 0; } 
@@ -522,6 +547,11 @@
             .resource-more-btn { margin-top: 10px; padding: 8px; }
             
             .tool-box { padding: 25px; }
+            
+            /* 手机端捐赠卡片垂直排版适配 */
+            .donation-box { flex-direction: column; text-align: center; gap: 25px; }
+            .donation-qr { width: 220px; }
+
             .slogan-en { font-size: 24px; }
             .info-section { padding-top: 40px; }
             
@@ -1046,6 +1076,24 @@
                         <span data-zh>获取网盘下载</span><span data-en>Download</span>
                     </a>
                 </div>
+
+                <!-- 新增：支持与鼓励 (捐赠板块) -->
+                <div class="tool-box donation-box">
+                    <div class="donation-text">
+                        <h3 class="tool-title">
+                            <span data-zh>☕️ 支持与鼓励</span>
+                            <span data-en>☕️ Buy Me a Coffee</span>
+                        </h3>
+                        <div class="tool-desc" style="margin-bottom: 0;">
+                            <span data-zh>如果这些工具提高了你的工作效率，或者你喜欢我的教程与分享，欢迎扫码请我喝杯咖啡！你的每一份支持，都是我持续用爱发电、更新优质内容的最大动力。</span>
+                            <span data-en>If these tools have boosted your productivity or you simply enjoy my content, consider buying me a coffee! Your support is the greatest motivation for my continuous creation and updates.</span>
+                        </div>
+                    </div>
+                    <div class="donation-qr">
+                        <img src="2ffc7841ec2f53d2b0af4f787da6f9e6.jpg" alt="Alipay Donation QR Code" loading="lazy">
+                    </div>
+                </div>
+
             </div>
         </div>
 
