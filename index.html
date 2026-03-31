@@ -1239,7 +1239,8 @@
             }
         }
 
-        function switchTab(tabId) {
+        // --- 加入 isInitialLoad 参数，判断是否为初次加载 ---
+        function switchTab(tabId, isInitialLoad = false) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => {
                 content.classList.remove('active');
@@ -1257,6 +1258,10 @@
             
             updateIndicator(activeTabBtn);
             
+            // 【核心新增】：把当前停留的模块记录在 URL 尾巴和浏览器的本地缓存里
+            window.history.replaceState(null, null, '#' + tabId);
+            localStorage.setItem('activeKeyCGTab', tabId);
+            
             // 新增：英文移动端由于采用横向滑动，点击时自动将元素平滑居中
             if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
                 const navLinks = document.querySelector('.nav-links');
@@ -1266,7 +1271,10 @@
 
             // --- 核心更新：修复切换 Tab 时的顿挫感 ---
             // 取消由于 DOM 高度剧变导致的 smooth 平滑滚动冲突，改为瞬间置顶
-            window.scrollTo(0, 0);
+            // 如果是初次加载（刷新页面），则不强制置顶，保留浏览器的原生记忆
+            if (!isInitialLoad) {
+                window.scrollTo(0, 0);
+            }
 
             // 仅对当前活跃的 tab 进行无缝级联动画，避免渲染卡顿
             if(tabId === 'work' || tabId === 'tutorial' || tabId === 'nav' || tabId === 'tools') {
@@ -1276,13 +1284,37 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initTheme(); 
+            
+            // 【核心新增】：在页面DOM刚加载好时，智能判断该回到哪个模块
+            let initialTab = 'work'; // 默认在作品区
+            const hash = window.location.hash.substring(1);
+            const validTabs = ['work', 'tools', 'tutorial', 'nav', 'info'];
+            
+            // 优先读取 URL 里的后缀，其次读取浏览器上一次的缓存记录
+            if (hash && validTabs.includes(hash)) {
+                initialTab = hash;
+            } else {
+                const savedTab = localStorage.getItem('activeKeyCGTab');
+                if (savedTab && validTabs.includes(savedTab)) {
+                    initialTab = savedTab;
+                }
+            }
+            
+            // 执行初始切换，带上 true 标记表示这是初次加载
+            switchTab(initialTab, true);
+            
             loadNotionProjects(); 
             
             setTimeout(() => {
                 const activeTab = document.querySelector('.nav-links a.active');
                 if(activeTab) {
                     updateIndicator(activeTab);
-                    document.getElementById('nav-indicator').style.opacity = '1';
+                    // 如果在英文移动端，初次加载后也自动滚动居中当前Tab
+                    if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+                        const navLinks = document.querySelector('.nav-links');
+                        const scrollLeft = activeTab.offsetLeft - (navLinks.offsetWidth / 2) + (activeTab.offsetWidth / 2);
+                        navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                    }
                 }
             }, 100);
 
