@@ -1305,7 +1305,11 @@
 
             // 仅对当前活跃的 tab 进行无缝级联动画，避免渲染卡顿
             if(tabId === 'work' || tabId === 'tutorial' || tabId === 'nav' || tabId === 'tools') {
-                animateGalleryItems(tabId);
+                // 【核心修复】：解决刷新时偶尔白屏的渲染 Bug。
+                // 给予浏览器一帧(约50ms)的缓冲时间，确保 display:block 布局完全生效后，再去执行入场动画。
+                setTimeout(() => {
+                    animateGalleryItems(tabId);
+                }, 50);
             }
         }
 
