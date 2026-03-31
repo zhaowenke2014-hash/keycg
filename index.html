@@ -1315,22 +1315,22 @@
                             <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
-                                <div class="overlay-tags">${project.tags}</div>
-                                <div class="action-buttons">
-                                    ${actionButtonsHtml}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    workGrid.insertAdjacentHTML('beforeend', cardHtml);
+                if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
+                if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
+
+                // ======== 核心修复：解决工具/宝藏模块刷新时，被异步 API 重置动画导致闪烁白屏的 Bug ========
+                // 仅当当前活跃的模块是需要动态加载的“作品”或“教程”时，才触发动画重新计算。
+                // 如果用户停留在此纯静态模块（如“工具”、“宝藏”），就不去干扰它们已经完成的入场动画。
+                const currentActiveTab = document.querySelector('.tab-content.active');
+                if (currentActiveTab && (currentActiveTab.id === 'work' || currentActiveTab.id === 'tutorial')) {
+                    animateGalleryItems(currentActiveTab.id);
                 }
-            });
 
-            if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
-            if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
-
-            // 初次加载时，触发全局动画计算
-            animateGalleryItems();
+            } catch (error) {
+                console.error(error);
+                workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，请检查正式环境下的 Vercel 配置。</span><span data-en>Failed to load database, please check Vercel config.</span></div>';
+                tutorialGrid.innerHTML = '';
+            }
         }
 
         // --- 加入 isInitialLoad 参数，判断是否为初次加载 ---
