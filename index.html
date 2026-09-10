@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KEYCG 赵文科 | Editor / CG generalist</title>
     <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="preload" href="renwenchengdu.webp" as="image" type="image/webp" fetchpriority="high">
     <style>
         /* 核心：提取所有颜色为全局变量，方便黑白昼夜切换 */
         :root {
@@ -100,6 +101,15 @@
             user-select: none; 
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
+        }
+        .nav-links a:focus-visible,
+        .logo:focus-visible,
+        .lang-switch:focus-visible,
+        .theme-switch:focus-visible,
+        .resource-more-btn:focus-visible,
+        .close-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
         }
         .nav-links a:hover { color: var(--text-main); }
         .nav-links a.active { color: var(--text-main); } 
@@ -391,6 +401,23 @@
             opacity: 0; transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
         }
         .modal-overlay.show { opacity: 1; }
+        body.modal-open { overflow: hidden; }
+
+        @media (hover: none) {
+            .grid-item:focus-within .item-overlay,
+            .grid-item.is-open .item-overlay,
+            .tutorial-card:focus-within .tutorial-hover-overlay,
+            .tutorial-card.is-open .tutorial-hover-overlay { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
         
         /* 视频弹窗结构 */
         #videoModal .modal-content { 
@@ -620,32 +647,32 @@
             }
         }
     </style>
-    <script src="/_vercel/insights/script.js"></script>
+    <script src="/_vercel/insights/script.js" defer></script>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="switchTab('work')">
+        <div class="logo" onclick="switchTab('work')" role="button" tabindex="0" aria-label="返回作品首页">
             <span class="logo-name" style="color: var(--accent);">KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span></span>
             <span class="logo-divider"> | </span>
             <span class="logo-title"><span data-zh>剪辑师 / CG动态设计师</span><span data-en>Editor / CG generalist</span></span>
         </div>
         
         <div class="header-right">
-            <div class="nav-links">
-                <a onclick="switchTab('work')" id="tab-work" class="active">
+            <div class="nav-links" role="tablist" aria-label="网站栏目">
+                <a onclick="switchTab('work')" id="tab-work" class="active" role="tab" tabindex="0" aria-controls="work" aria-selected="true">
                     <span data-zh>作品</span><span data-en>WORK</span>
                 </a>
-                <a onclick="switchTab('tools')" id="tab-tools">
+                <a onclick="switchTab('tools')" id="tab-tools" role="tab" tabindex="0" aria-controls="tools" aria-selected="false">
                     <span data-zh>工具</span><span data-en>TOOLS</span>
                 </a>
-                <a onclick="switchTab('tutorial')" id="tab-tutorial">
+                <a onclick="switchTab('tutorial')" id="tab-tutorial" role="tab" tabindex="0" aria-controls="tutorial" aria-selected="false">
                     <span data-zh>教程</span><span data-en>TUTORIAL</span>
                 </a>
-                <a onclick="switchTab('nav')" id="tab-nav">
+                <a onclick="switchTab('nav')" id="tab-nav" role="tab" tabindex="0" aria-controls="nav" aria-selected="false">
                     <span data-zh>宝藏</span><span data-en>TREASURES</span>
                 </a>
-                <a onclick="switchTab('info')" id="tab-info">
+                <a onclick="switchTab('info')" id="tab-info" role="tab" tabindex="0" aria-controls="info" aria-selected="false">
                     <span data-zh>关于</span><span data-en>INFO</span>
                 </a>
                 <!-- 滑动指示器元素 -->
@@ -653,10 +680,10 @@
             </div>
             
             <div class="controls-group">
-                <div class="theme-switch" onclick="toggleTheme()" title="切换昼夜模式 / Toggle Theme">
+                <div class="theme-switch" onclick="toggleTheme()" title="切换昼夜模式 / Toggle Theme" role="button" tabindex="0" aria-label="切换昼夜模式">
                     <span id="theme-icon">☀️</span>
                 </div>
-                <div class="lang-switch" onclick="toggleLanguage()">
+                <div class="lang-switch" onclick="toggleLanguage()" role="button" tabindex="0" aria-label="切换中英文">
                     <span data-zh>EN</span><span data-en>中</span>
                 </div>
             </div>
@@ -1122,9 +1149,9 @@
     </footer>
 
     <!-- 弹窗播放器 -->
-    <div class="modal-overlay" id="videoModal">
+    <div class="modal-overlay" id="videoModal" role="dialog" aria-modal="true" aria-label="视频播放器" aria-hidden="true">
         <div class="modal-content">
-            <div class="close-btn" onclick="closeVideoModal()">
+            <div class="close-btn" onclick="closeVideoModal()" role="button" tabindex="0" aria-label="关闭视频">
                 <!-- 纯矢量 SVG 完美居中叉号 -->
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </div>
@@ -1135,9 +1162,9 @@
     </div>
 
     <!-- 画中画列表弹窗 -->
-    <div class="modal-overlay" id="resourceModal">
+    <div class="modal-overlay" id="resourceModal" role="dialog" aria-modal="true" aria-labelledby="resModalTitle" aria-hidden="true">
         <div class="modal-content">
-            <div class="close-btn" onclick="closeResModal()">
+            <div class="close-btn" onclick="closeResModal()" role="button" tabindex="0" aria-label="关闭资源列表">
                 <!-- 纯矢量 SVG 完美居中叉号 -->
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </div>
@@ -1219,26 +1246,48 @@
             }
             const items = container.querySelectorAll('.grid-item, .tutorial-card, .resource-category, .tool-box');
             items.forEach((item, index) => {
-                item.classList.remove('animate-in');
-                // 魔法代码：强制浏览器重排重绘，取代 setTimeout，实现无缝瞬间重置动画
-                void item.offsetWidth; 
-                item.style.animationDelay = `${index * 0.08}s`;
-                item.classList.add('animate-in');
+                if (item.classList.contains('animate-in')) return;
+                item.style.animationDelay = `${Math.min(index, 8) * 0.05}s`;
+                requestAnimationFrame(() => item.classList.add('animate-in'));
             });
         }
 
-        async function loadNotionProjects() {
+        function optimizeCoverUrl(url) {
+            try {
+                const parsed = new URL(url, window.location.href);
+                if (parsed.hostname === 'www.keycg.cn' || parsed.hostname === 'keycg.cn' || parsed.origin === window.location.origin) {
+                    parsed.pathname = parsed.pathname.replace(/\.(?:jpe?g|png)$/i, '.webp');
+                    return parsed.pathname + parsed.search;
+                }
+            } catch (_) {}
+            return url;
+        }
+
+        async function loadNotionProjects(providedProjects = null) {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
-            let projects = [];
+            let projects = providedProjects || [];
+            const isProd = window.location.hostname.includes('keycg.cn');
+            const apiUrl = isProd ? '/api/notion' : 'https://www.keycg.cn/api/notion';
 
             try {
-                const isProd = window.location.hostname.includes('keycg.cn');
-                const apiUrl = isProd ? '/api/notion' : 'https://www.keycg.cn/api/notion';
-
-                const res = await fetch(apiUrl);
-                if (!res.ok) throw new Error('API Request Failed');
-                projects = await res.json();
+                if (!providedProjects) {
+                    const cached = localStorage.getItem('keycgProjectsCache');
+                    if (cached) {
+                        projects = JSON.parse(cached).projects || [];
+                        fetch(apiUrl).then(async res => {
+                            if (!res.ok) return;
+                            const freshProjects = await res.json();
+                            localStorage.setItem('keycgProjectsCache', JSON.stringify({ projects: freshProjects, savedAt: Date.now() }));
+                            if (JSON.stringify(freshProjects) !== JSON.stringify(projects)) loadNotionProjects(freshProjects);
+                        }).catch(() => {});
+                    } else {
+                        const res = await fetch(apiUrl);
+                        if (!res.ok) throw new Error('API Request Failed');
+                        projects = await res.json();
+                        localStorage.setItem('keycgProjectsCache', JSON.stringify({ projects, savedAt: Date.now() }));
+                    }
+                }
             } catch (error) {
                 console.warn('跨域或网络请求失败，若是预览环境属于正常现象：', error);
                 if (!window.location.hostname.includes('keycg.cn')) {
@@ -1272,7 +1321,7 @@
             let tutorialCount = 0;
 
             projects.forEach(project => {
-                let displayCover = project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>";
+                let displayCover = optimizeCoverUrl(project.coverUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='700' height='394'><rect width='700' height='394' fill='%23222'/><text x='50%' y='50%' fill='%23FFD700' font-size='18' font-family='sans-serif' text-anchor='middle' dy='.3em'>CoverURL Not Found</text></svg>");
                 
                 const rawTitle = project.title || '未命名作品';
                 const titleParts = rawTitle.split(/[|｜/]/); 
@@ -1293,7 +1342,7 @@
                     let platformLabelZh = '📄 图文';
                     let platformLabelEn = '📄 ARTICLE';
                     let platformColor = '#00D68F'; 
-                    let btnTag = 'div'; 
+                    let btnTag = 'button';
 
                     // 智能识别扩展：支持 B站(弹窗)、YouTube(弹窗)、以及各大主流平台(新标签页)
                     if (link.startsWith('BV') || link.includes('bilibili.com/video/BV')) {
@@ -1353,7 +1402,7 @@
                     const cardHtml = `
                         <div class="tutorial-card">
                             <div class="tutorial-thumb-container">
-                                <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                                 <div class="tutorial-hover-overlay">
                                     ${actionButtonsHtml}
                                 </div>
@@ -1368,7 +1417,7 @@
                     workCount++;
                     const cardHtml = `
                         <div class="grid-item">
-                            <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                            <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="${workCount <= 2 ? 'eager' : 'lazy'}" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
                                 <div class="overlay-tags">${project.tags}</div>
@@ -1403,6 +1452,7 @@
             const tabs = document.querySelectorAll('.nav-links a');
             tabs.forEach(tab => {
                 tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
             });
             
             const activeTabContent = document.getElementById(tabId);
@@ -1410,6 +1460,7 @@
             
             activeTabContent.classList.add('active');
             activeTabBtn.classList.add('active');
+            activeTabBtn.setAttribute('aria-selected', 'true');
             
             updateIndicator(activeTabBtn);
             
@@ -1487,6 +1538,43 @@
             resourceModal.addEventListener('click', function(e) {
                 if (e.target === this) closeResModal();
             });
+
+            document.querySelectorAll('.resource-more-btn').forEach(button => {
+                button.setAttribute('role', 'button');
+                button.setAttribute('tabindex', '0');
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    if (videoModal.classList.contains('show')) closeVideoModal();
+                    if (resourceModal.classList.contains('show')) closeResModal();
+                    return;
+                }
+                if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('[role="button"], [role="tab"]')) {
+                    event.preventDefault();
+                    event.target.click();
+                }
+                if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && event.target.matches('[role="tab"]')) {
+                    event.preventDefault();
+                    const tabs = [...document.querySelectorAll('[role="tab"]')];
+                    const offset = event.key === 'ArrowRight' ? 1 : -1;
+                    const next = tabs[(tabs.indexOf(event.target) + offset + tabs.length) % tabs.length];
+                    next.focus();
+                    next.click();
+                }
+            });
+
+            document.addEventListener('click', event => {
+                if (!window.matchMedia('(hover: none)').matches) return;
+                const card = event.target.closest('.grid-item, .tutorial-card');
+                if (!card || event.target.closest('.action-btn')) return;
+                card.classList.toggle('is-open');
+            });
+        });
+
+        window.addEventListener('hashchange', () => {
+            const tabId = window.location.hash.substring(1);
+            if (['work', 'tools', 'tutorial', 'nav', 'info'].includes(tabId)) switchTab(tabId, true);
         });
 
         window.addEventListener('resize', () => {
@@ -1512,6 +1600,8 @@
             }
 
             modalOverlay.style.display = 'flex';
+            modalOverlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
             void modalOverlay.offsetWidth;
 
             if (platform === 'bilibili') {
@@ -1521,6 +1611,7 @@
             }
 
             modalOverlay.classList.add('show');
+            modalOverlay.querySelector('.close-btn').focus();
         }
 
         function closeVideoModal() {
@@ -1528,8 +1619,10 @@
             modalOverlay.classList.remove('show');
             setTimeout(() => {
                 modalOverlay.style.display = 'none';
+                modalOverlay.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
                 document.getElementById('videoIframe').src = "";
-            }, 600); 
+            }, 600);
         }
 
         // ======== 资源列表画中画弹窗交互 ========
@@ -1559,8 +1652,11 @@
             }
 
             modalOverlay.style.display = 'flex';
+            modalOverlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
             void modalOverlay.offsetWidth;
             modalOverlay.classList.add('show');
+            modalOverlay.querySelector('.close-btn').focus();
         }
 
         function closeResModal() {
@@ -1568,7 +1664,9 @@
             modalOverlay.classList.remove('show');
             setTimeout(() => {
                 modalOverlay.style.display = 'none';
-            }, 600); 
+                modalOverlay.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+            }, 600);
         }
     </script>
 
