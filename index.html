@@ -54,9 +54,10 @@
             -webkit-font-smoothing: antialiased; /* 顺手优化字体平滑度 */
         }
 
-        /* 核心：双语显示拦截逻辑 */
-        body.en-mode [data-zh] { display: none !important; }
-        body:not(.en-mode) [data-en] { display: none !important; }
+        /* Language display: Chinese uses the original copy; all other languages
+           reuse the English nodes with text supplied by a lazy-loaded pack. */
+        body:not(.lang-zh) [data-zh] { display: none !important; }
+        body.lang-zh [data-en] { display: none !important; }
 
         header {
             display: flex;
@@ -141,7 +142,7 @@
             border-radius: 2px;
         }
 
-        .controls-group { display: flex; gap: 12px; margin-left: 30px; }
+        .controls-group { display: flex; gap: 12px; margin-left: 30px; position: relative; }
         .lang-switch {
             cursor: pointer;
             font-size: 14px;
@@ -155,11 +156,56 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-width: 52px;
+            background: transparent;
+            font-family: inherit;
         }
         .lang-switch:hover {
             color: var(--accent);
             border-color: var(--accent);
         }
+        .language-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            z-index: 100;
+            width: 190px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-dark);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+        }
+        .language-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .language-option {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 10px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            color: var(--text-main);
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .language-option:hover,
+        .language-option[aria-checked="true"] {
+            background: var(--item-bg);
+            color: var(--accent);
+        }
+        .language-code { color: var(--text-muted); font-size: 11px; letter-spacing: 1px; }
 
         .main-container { padding: 0 60px 20px 60px; flex: 1; }
 
@@ -514,9 +560,8 @@
             .nav-links a:hover { color: var(--text-muted); }
             .nav-links a.active:hover { color: var(--text-main); }
 
-            /* ======== 新增：移动端【英文模式】专属导航栏优化 ======== */
-            /* 英文单词较长且长短不一，强制等分会导致粘连。切换到英文时，自动变为原生 App 级别的横向滑动式导航 */
-            body.en-mode .nav-links {
+            /* Non-Chinese labels vary in length, so use a horizontally scrolling nav. */
+            body:not(.lang-zh) .nav-links {
                 justify-content: flex-start; /* 英文较长，取消强制等分，改为左对齐依次排列 */
                 overflow-x: auto; /* 超出屏幕宽度时允许平滑横向滑动 */
                 overflow-y: hidden;
@@ -524,10 +569,10 @@
                 gap: 5px; /* 菜单之间的间隙 */
                 padding-bottom: 2px; /* 给下方滑动指示器留出一点冗余高度 */
             }
-            body.en-mode .nav-links::-webkit-scrollbar {
+            body:not(.lang-zh) .nav-links::-webkit-scrollbar {
                 display: none; /* 隐藏原生滚动条，保持高级清爽的观感 */
             }
-            body.en-mode .nav-links a {
+            body:not(.lang-zh) .nav-links a {
                 flex: 0 0 auto; /* 取消弹性等分挤压，由文字本身宽度自然撑开 */
                 font-size: 13px; /* 英文采用稍微缩小一点、更加精致紧凑的字号 */
                 padding: 12px 12px 10px 12px; /* 左右增加呼吸感内边距，方便点按 */
@@ -678,13 +723,13 @@
     </style>
     <script src="/_vercel/insights/script.js" defer></script>
 </head>
-<body>
+<body class="lang-zh">
 
     <header>
         <div class="logo" onclick="switchTab('work')" role="button" tabindex="0" aria-label="返回作品首页">
             <span class="logo-name" style="color: var(--accent);">KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span></span>
             <span class="logo-divider" aria-hidden="true"></span>
-            <span class="logo-title"><span data-zh>剪辑师<span class="logo-divider" aria-hidden="true"></span>CG动态设计师</span><span data-en>Editor<span class="logo-divider" aria-hidden="true"></span>CG generalist</span></span>
+            <span class="logo-title"><span data-zh>剪辑师</span><span data-en>Editor</span><span class="logo-divider" aria-hidden="true"></span><span data-zh>CG动态设计师</span><span data-en>CG generalist</span></span>
         </div>
         
         <div class="header-right">
@@ -709,8 +754,16 @@
             </div>
             
             <div class="controls-group">
-                <div class="lang-switch" onclick="toggleLanguage()" role="button" tabindex="0" aria-label="切换中英文">
-                    <span data-zh>EN</span><span data-en>中</span>
+                <button class="lang-switch" id="language-button" type="button" onclick="toggleLanguageMenu()" aria-haspopup="menu" aria-expanded="false" aria-label="选择语言">中 ▾</button>
+                <div class="language-menu" id="language-menu" role="menu" aria-label="语言选择">
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="true" data-language="zh" onclick="selectLanguage('zh')"><span>中文</span><span class="language-code">ZH</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="en" onclick="selectLanguage('en')"><span>English</span><span class="language-code">EN</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="ja" onclick="selectLanguage('ja')"><span>日本語</span><span class="language-code">JA</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="ko" onclick="selectLanguage('ko')"><span>한국어</span><span class="language-code">KO</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="es" onclick="selectLanguage('es')"><span>Español</span><span class="language-code">ES</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="fr" onclick="selectLanguage('fr')"><span>Français</span><span class="language-code">FR</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="de" onclick="selectLanguage('de')"><span>Deutsch</span><span class="language-code">DE</span></button>
+                    <button class="language-option" type="button" role="menuitemradio" aria-checked="false" data-language="pt" onclick="selectLanguage('pt')"><span>Português</span><span class="language-code">PT</span></button>
                 </div>
             </div>
         </div>
@@ -1035,7 +1088,7 @@
                             <span data-zh>科的脑图</span>
                             <span data-en>mindmap</span>
                             <!-- 发光“新”字角标 -->
-                            <span style="position: absolute; top: -10px; right: -25px; background: linear-gradient(45deg, #ff3366, #ff9933); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; box-shadow: 0 0 8px rgba(255, 51, 102, 0.6); animation: pulseGlow 2s infinite;">新</span>
+                            <span style="position: absolute; top: -10px; right: -25px; background: linear-gradient(45deg, #ff3366, #ff9933); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: bold; box-shadow: 0 0 8px rgba(255, 51, 102, 0.6); animation: pulseGlow 2s infinite;"><span data-zh>新</span><span data-en>NEW</span></span>
                         </h3>
                         <div class="tool-desc">
                             <span data-zh>一款轻量、极简的在线思维导图工具，帮助你快速梳理灵感、构建知识体系。支持云端保存与导出。</span>
@@ -1153,8 +1206,7 @@
         <div id="info" class="tab-content">
             <div class="info-section">
                 <div class="slogan-box">
-                    <div class="slogan-en">"Life is suffering. Yet he picked up his broken oar and set off again."</div>
-                    <div class="slogan-cn">生活是苦难的，他又划着他的断桨出发了……</div>
+                    <div class="slogan-en" data-i18n-text data-i18n-source="Life is suffering. Yet he picked up his broken oar and set off again." data-i18n-zh="生活是苦难的，他又划着他的断桨出发了……">生活是苦难的，他又划着他的断桨出发了……</div>
                 </div>
 
                 <div class="info-image-box">
@@ -1171,7 +1223,7 @@
     </div>
 
     <footer class="global-footer">
-        © 2026 KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span>. ALL RIGHTS RESERVED.
+        © 2026 KEYCG <span data-zh>赵文科</span><span data-en>Zhao Wenke</span>. <span data-zh>保留所有权利。</span><span data-en>ALL RIGHTS RESERVED.</span>
     </footer>
 
     <!-- 弹窗播放器 -->
@@ -1222,24 +1274,107 @@
             }
         }
 
-        // --- 双语切换逻辑 ---
-        let isEnglish = false;
-        function toggleLanguage() {
-            isEnglish = !isEnglish;
-            if (isEnglish) {
-                document.body.classList.add('en-mode');
-                document.title = "KEYCG Zhao Wenke | Editor / CG generalist";
-            } else {
-                document.body.classList.remove('en-mode');
-                document.title = "KEYCG 赵文科 | Editor / CG generalist";
+        // --- Eight-language selector with packs loaded only when requested ---
+        const languageConfig = {
+            zh: { button: '中', htmlLang: 'zh-CN', title: 'KEYCG 赵文科 | 剪辑师 | CG动态设计师', choose: '选择语言' },
+            en: { button: 'EN', htmlLang: 'en', title: 'KEYCG Zhao Wenke | Editor | CG generalist', choose: 'Choose language' },
+            ja: { button: 'JA', htmlLang: 'ja', title: 'KEYCG Zhao Wenke | ビデオエディター | CGモーションデザイナー', choose: '言語を選択' },
+            ko: { button: 'KO', htmlLang: 'ko', title: 'KEYCG Zhao Wenke | 영상 편집자 | CG 모션 디자이너', choose: '언어 선택' },
+            es: { button: 'ES', htmlLang: 'es', title: 'KEYCG Zhao Wenke | Editor de vídeo | Diseñador de motion graphics', choose: 'Elegir idioma' },
+            fr: { button: 'FR', htmlLang: 'fr', title: 'KEYCG Zhao Wenke | Monteur vidéo | Motion designer 3D', choose: 'Choisir la langue' },
+            de: { button: 'DE', htmlLang: 'de', title: 'KEYCG Zhao Wenke | Videoeditor | CG-Motion-Designer', choose: 'Sprache wählen' },
+            pt: { button: 'PT', htmlLang: 'pt', title: 'KEYCG Zhao Wenke | Editor de vídeo | Designer de motion graphics', choose: 'Escolher idioma' }
+        };
+        const languagePacks = {};
+        let currentLanguage = 'zh';
+
+        function toggleLanguageMenu() {
+            const menu = document.getElementById('language-menu');
+            const button = document.getElementById('language-button');
+            const isOpen = menu.classList.toggle('open');
+            button.setAttribute('aria-expanded', String(isOpen));
+        }
+
+        function closeLanguageMenu() {
+            const menu = document.getElementById('language-menu');
+            const button = document.getElementById('language-button');
+            if (!menu || !button) return;
+            menu.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+        }
+
+        function captureTranslationSource(element) {
+            if (element.dataset.i18nSource) return;
+            const original = element.textContent;
+            element.dataset.i18nSource = original.trim();
+            element.dataset.i18nOriginal = original;
+            element.dataset.i18nLeading = /^\s/.test(original) ? 'true' : 'false';
+            element.dataset.i18nTrailing = /\s$/.test(original) ? 'true' : 'false';
+        }
+
+        function setTranslatedText(element, value) {
+            const leading = element.dataset.i18nLeading === 'true' ? ' ' : '';
+            const trailing = element.dataset.i18nTrailing === 'true' ? ' ' : '';
+            element.textContent = leading + value + trailing;
+        }
+
+        async function loadLanguagePack(language) {
+            if (language === 'zh' || languagePacks[language]) return languagePacks[language] || {};
+            const response = await fetch(`/i18n/${language}.json`);
+            if (!response.ok) throw new Error(`Language pack ${language} failed to load`);
+            languagePacks[language] = await response.json();
+            return languagePacks[language];
+        }
+
+        function applyTranslations(root = document) {
+            const pack = languagePacks[currentLanguage] || {};
+            root.querySelectorAll('[data-en]').forEach(element => {
+                captureTranslationSource(element);
+                const source = element.dataset.i18nSource;
+                if (currentLanguage === 'zh') {
+                    element.textContent = element.dataset.i18nOriginal;
+                } else {
+                    setTranslatedText(element, pack[source] || source);
+                }
+            });
+            root.querySelectorAll('[data-i18n-text]').forEach(element => {
+                const source = element.dataset.i18nSource || element.textContent.trim();
+                if (!element.dataset.i18nSource) element.dataset.i18nSource = source;
+                const value = currentLanguage === 'zh'
+                    ? (element.dataset.i18nZh || source)
+                    : (pack[source] || source);
+                element.textContent = value;
+            });
+        }
+
+        async function selectLanguage(language, options = {}) {
+            if (!languageConfig[language]) language = 'zh';
+            currentLanguage = language;
+            document.body.classList.toggle('lang-zh', language === 'zh');
+            document.documentElement.lang = languageConfig[language].htmlLang;
+
+            try {
+                await loadLanguagePack(language);
+            } catch (error) {
+                console.warn('Language pack unavailable; using English fallback:', error);
             }
-            
+
+            applyTranslations();
+            document.title = languageConfig[language].title;
+            const button = document.getElementById('language-button');
+            button.textContent = `${languageConfig[language].button} ▾`;
+            button.setAttribute('aria-label', languageConfig[language].choose);
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.setAttribute('aria-checked', String(option.dataset.language === language));
+            });
+            if (options.save !== false) localStorage.setItem('keycgLanguage', language);
+            closeLanguageMenu();
+
             setTimeout(() => {
                 const activeTab = document.querySelector('.nav-links a.active');
-                if(activeTab) {
+                if (activeTab) {
                     updateIndicator(activeTab);
-                    // 如果在英文移动端，切换语言后也自动滚动居中当前Tab
-                    if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+                    if (window.innerWidth <= 768 && currentLanguage !== 'zh') {
                         const navLinks = document.querySelector('.nav-links');
                         const scrollLeft = activeTab.offsetLeft - (navLinks.offsetWidth / 2) + (activeTab.offsetWidth / 2);
                         navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
@@ -1492,7 +1627,7 @@
                             <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="markCoverLoaded(this)" onerror="markCoverLoaded(this)">
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
-                                <div class="overlay-tags">${project.tags}</div>
+                                <div class="overlay-tags" data-i18n-text>${project.tags}</div>
                                 <div class="action-buttons">
                                     ${actionButtonsHtml}
                                 </div>
@@ -1506,6 +1641,8 @@
             if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
             if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
 
+            applyTranslations(workGrid);
+            applyTranslations(tutorialGrid);
             observeDeferredImages(workGrid);
             observeDeferredImages(tutorialGrid);
 
@@ -1546,8 +1683,8 @@
             window.history.replaceState(null, null, '#' + tabId);
             localStorage.setItem('activeKeyCGTab', tabId);
             
-            // 新增：英文移动端由于采用横向滑动，点击时自动将元素平滑居中
-            if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+            // Longer non-Chinese labels use the horizontally scrolling mobile nav.
+            if (window.innerWidth <= 768 && currentLanguage !== 'zh') {
                 const navLinks = document.querySelector('.nav-links');
                 const scrollLeft = activeTabBtn.offsetLeft - (navLinks.offsetWidth / 2) + (activeTabBtn.offsetWidth / 2);
                 navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
@@ -1571,7 +1708,19 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initTheme(); 
+            initTheme();
+            const savedLanguage = localStorage.getItem('keycgLanguage');
+            selectLanguage(languageConfig[savedLanguage] ? savedLanguage : 'zh', { save: false });
+
+            document.addEventListener('click', event => {
+                if (!event.target.closest('.controls-group')) closeLanguageMenu();
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closeLanguageMenu();
+                    document.getElementById('language-button').focus();
+                }
+            });
             
             // 【核心新增】：在页面DOM刚加载好时，智能判断该回到哪个模块
             let initialTab = 'work'; // 默认在作品区
@@ -1597,8 +1746,8 @@
                 const activeTab = document.querySelector('.nav-links a.active');
                 if(activeTab) {
                     updateIndicator(activeTab);
-                    // 如果在英文移动端，初次加载后也自动滚动居中当前Tab
-                    if (window.innerWidth <= 768 && document.body.classList.contains('en-mode')) {
+                    // Keep the active translated label centered on mobile.
+                    if (window.innerWidth <= 768 && currentLanguage !== 'zh') {
                         const navLinks = document.querySelector('.nav-links');
                         const scrollLeft = activeTab.offsetLeft - (navLinks.offsetWidth / 2) + (activeTab.offsetWidth / 2);
                         navLinks.scrollTo({ left: scrollLeft, behavior: 'smooth' });
