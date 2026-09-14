@@ -1267,30 +1267,30 @@
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
             let projects = providedProjects || [];
-            const isProd = window.location.hostname.includes('keycg.cn');
-            const apiUrl = isProd ? '/api/notion' : 'https://www.keycg.cn/api/notion';
+            const isLocalPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiUrl = '/api/notion';
 
             try {
                 if (!providedProjects) {
-                    const cached = localStorage.getItem('keycgProjectsCache');
+                    const cached = localStorage.getItem('keycgProjectsCacheV2');
                     if (cached) {
                         projects = JSON.parse(cached).projects || [];
                         fetch(apiUrl).then(async res => {
                             if (!res.ok) return;
                             const freshProjects = await res.json();
-                            localStorage.setItem('keycgProjectsCache', JSON.stringify({ projects: freshProjects, savedAt: Date.now() }));
+                            localStorage.setItem('keycgProjectsCacheV2', JSON.stringify({ projects: freshProjects, savedAt: Date.now() }));
                             if (JSON.stringify(freshProjects) !== JSON.stringify(projects)) loadNotionProjects(freshProjects);
                         }).catch(() => {});
                     } else {
                         const res = await fetch(apiUrl);
                         if (!res.ok) throw new Error('API Request Failed');
                         projects = await res.json();
-                        localStorage.setItem('keycgProjectsCache', JSON.stringify({ projects, savedAt: Date.now() }));
+                        localStorage.setItem('keycgProjectsCacheV2', JSON.stringify({ projects, savedAt: Date.now() }));
                     }
                 }
             } catch (error) {
                 console.warn('跨域或网络请求失败，若是预览环境属于正常现象：', error);
-                if (!window.location.hostname.includes('keycg.cn')) {
+                if (isLocalPreview) {
                     // 非正式环境遇到错误时，加载演示数据以供预览
                     projects = [
                         {
