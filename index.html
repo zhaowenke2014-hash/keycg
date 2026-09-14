@@ -209,6 +209,17 @@
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
             will-change: opacity, transform;
         }
+        .grid-item::before,
+        .tutorial-thumb-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, var(--item-bg) 25%, var(--border-color) 42%, var(--item-bg) 58%);
+            background-size: 240% 100%;
+            animation: coverPlaceholder 1.4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes coverPlaceholder { to { background-position-x: -240%; } }
         .grid-item.animate-in { animation: slideUpFade 0.6s ease forwards; }
         /* 核心修复：使用 translate3d 强制保留 GPU 渲染层 */
         @keyframes slideUpFade { to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -1263,25 +1274,48 @@
             return url;
         }
 
+        const deferredImageQueue = [];
+        let activeDeferredImageLoads = 0;
+
+        function runDeferredImageQueue() {
+            while (activeDeferredImageLoads < 2 && deferredImageQueue.length) {
+                const image = deferredImageQueue.shift();
+                const source = image.dataset.src;
+                if (!source) continue;
+                activeDeferredImageLoads++;
+                image.removeAttribute('data-src');
+                const finished = () => {
+                    activeDeferredImageLoads--;
+                    runDeferredImageQueue();
+                };
+                image.addEventListener('load', finished, { once: true });
+                image.addEventListener('error', finished, { once: true });
+                image.src = source;
+            }
+        }
+
+        function queueDeferredImage(image) {
+            if (image.dataset.queued || !image.dataset.src) return;
+            image.dataset.queued = 'true';
+            deferredImageQueue.push(image);
+            runDeferredImageQueue();
+        }
+
         function observeDeferredImages(root) {
             const images = root.querySelectorAll('img[data-src]');
-            const loadImage = image => {
-                image.src = image.dataset.src;
-                image.removeAttribute('data-src');
-            };
 
             if (!('IntersectionObserver' in window)) {
-                images.forEach(loadImage);
+                images.forEach(queueDeferredImage);
                 return;
             }
 
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (!entry.isIntersecting) return;
-                    loadImage(entry.target);
+                    queueDeferredImage(entry.target);
                     observer.unobserve(entry.target);
                 });
-            }, { rootMargin: '160px 0px' });
+            }, { rootMargin: '120px 0px' });
 
             images.forEach(image => observer.observe(image));
         }
@@ -1438,7 +1472,7 @@
                     tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
                 } else {
                     workCount++;
-                    const imageSource = workCount <= 3 ? `src="${displayCover}"` : `data-src="${displayCover}"`;
+                    const imageSource = workCount === 1 ? `src="${displayCover}"` : `data-src="${displayCover}"`;
                     const cardHtml = `
                         <div class="grid-item">
                             <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
