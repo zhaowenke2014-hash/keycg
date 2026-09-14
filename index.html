@@ -1263,6 +1263,29 @@
             return url;
         }
 
+        function observeDeferredImages(root) {
+            const images = root.querySelectorAll('img[data-src]');
+            const loadImage = image => {
+                image.src = image.dataset.src;
+                image.removeAttribute('data-src');
+            };
+
+            if (!('IntersectionObserver' in window)) {
+                images.forEach(loadImage);
+                return;
+            }
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    loadImage(entry.target);
+                    observer.unobserve(entry.target);
+                });
+            }, { rootMargin: '160px 0px' });
+
+            images.forEach(image => observer.observe(image));
+        }
+
         async function loadNotionProjects(providedProjects = null) {
             const workGrid = document.getElementById('gallery-grid');
             const tutorialGrid = document.getElementById('tutorial-grid');
@@ -1402,7 +1425,7 @@
                     const cardHtml = `
                         <div class="tutorial-card">
                             <div class="tutorial-thumb-container">
-                                <img src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" loading="lazy" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                <img data-src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                                 <div class="tutorial-hover-overlay">
                                     ${actionButtonsHtml}
                                 </div>
@@ -1415,9 +1438,10 @@
                     tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
                 } else {
                     workCount++;
+                    const imageSource = workCount <= 3 ? `src="${displayCover}"` : `data-src="${displayCover}"`;
                     const cardHtml = `
                         <div class="grid-item">
-                            <img src="${displayCover}" alt="${titleZh}" class="item-visual" loading="${workCount <= 2 ? 'eager' : 'lazy'}" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                            <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
                                 <div class="overlay-tags">${project.tags}</div>
@@ -1433,6 +1457,9 @@
 
             if (workCount === 0) workGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>暂无作品内容。</span><span data-en>No projects available.</span></div>';
             if (tutorialCount === 0) tutorialGrid.innerHTML = '<div style="color: var(--text-muted); padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>即将发布，敬请期待...</span><span data-en>Coming soon...</span></div>';
+
+            observeDeferredImages(workGrid);
+            observeDeferredImages(tutorialGrid);
 
             // ======== 核心修复：解决工具/宝藏模块刷新时，被异步 API 重置动画导致闪烁白屏的 Bug ========
             // 仅当当前活跃的模块是需要动态加载的“作品”或“教程”时，才触发动画重新计算。
