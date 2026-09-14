@@ -113,7 +113,6 @@
         .nav-links a:focus-visible,
         .logo:focus-visible,
         .lang-switch:focus-visible,
-        .theme-switch:focus-visible,
         .resource-more-btn:focus-visible,
         .close-btn:focus-visible {
             outline: 2px solid var(--accent);
@@ -143,7 +142,7 @@
         }
 
         .controls-group { display: flex; gap: 12px; margin-left: 30px; }
-        .lang-switch, .theme-switch {
+        .lang-switch {
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
@@ -157,7 +156,7 @@
             align-items: center;
             justify-content: center;
         }
-        .lang-switch:hover, .theme-switch:hover {
+        .lang-switch:hover {
             color: var(--accent);
             border-color: var(--accent);
         }
@@ -710,9 +709,6 @@
             </div>
             
             <div class="controls-group">
-                <div class="theme-switch" onclick="toggleTheme()" title="切换昼夜模式 / Toggle Theme" role="button" tabindex="0" aria-label="切换昼夜模式">
-                    <span id="theme-icon">☀️</span>
-                </div>
                 <div class="lang-switch" onclick="toggleLanguage()" role="button" tabindex="0" aria-label="切换中英文">
                     <span data-zh>EN</span><span data-en>中</span>
                 </div>
@@ -1218,18 +1214,11 @@
             applyTheme();
         }
 
-        function toggleTheme() {
-            isLightMode = !isLightMode;
-            applyTheme();
-        }
-
         function applyTheme() {
             if (isLightMode) {
                 document.body.classList.add('light-mode');
-                document.getElementById('theme-icon').innerText = '🌙'; 
             } else {
                 document.body.classList.remove('light-mode');
-                document.getElementById('theme-icon').innerText = '☀️'; 
             }
         }
 
