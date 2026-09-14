@@ -1520,6 +1520,9 @@
             const activeTabBtn = document.getElementById('tab-' + tabId);
             
             activeTabContent.classList.add('active');
+            // Hidden galleries have no intersection area. Observe again after the
+            // selected tab has entered layout so its deferred covers can load.
+            requestAnimationFrame(() => observeDeferredImages(activeTabContent));
             activeTabBtn.classList.add('active');
             activeTabBtn.setAttribute('aria-selected', 'true');
             
