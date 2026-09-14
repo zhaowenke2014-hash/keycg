@@ -217,7 +217,14 @@
             background: linear-gradient(110deg, var(--item-bg) 25%, var(--border-color) 42%, var(--item-bg) 58%);
             background-size: 240% 100%;
             animation: coverPlaceholder 1.4s ease-in-out infinite;
+            transition: opacity 0.25s ease;
             pointer-events: none;
+        }
+        .grid-item.cover-loaded::before,
+        .tutorial-thumb-container.cover-loaded::before {
+            opacity: 0;
+            visibility: hidden;
+            animation: none;
         }
         @keyframes coverPlaceholder { to { background-position-x: -240%; } }
         .grid-item.animate-in { animation: slideUpFade 0.6s ease forwards; }
@@ -1277,6 +1284,12 @@
         const deferredImageQueue = [];
         let activeDeferredImageLoads = 0;
 
+        function markCoverLoaded(image) {
+            image.classList.add('img-loaded');
+            const coverContainer = image.closest('.grid-item, .tutorial-thumb-container');
+            if (coverContainer) coverContainer.classList.add('cover-loaded');
+        }
+
         function runDeferredImageQueue() {
             while (activeDeferredImageLoads < 2 && deferredImageQueue.length) {
                 const image = deferredImageQueue.shift();
@@ -1459,7 +1472,7 @@
                     const cardHtml = `
                         <div class="tutorial-card">
                             <div class="tutorial-thumb-container">
-                                <img data-src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                                <img data-src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" decoding="async" onload="markCoverLoaded(this)" onerror="markCoverLoaded(this)">
                                 <div class="tutorial-hover-overlay">
                                     ${actionButtonsHtml}
                                 </div>
@@ -1475,7 +1488,7 @@
                     const imageSource = workCount === 1 ? `src="${displayCover}"` : `data-src="${displayCover}"`;
                     const cardHtml = `
                         <div class="grid-item">
-                            <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="this.classList.add('img-loaded')" onerror="this.classList.add('img-loaded')">
+                            <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="markCoverLoaded(this)" onerror="markCoverLoaded(this)">
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
                                 <div class="overlay-tags">${project.tags}</div>
