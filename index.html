@@ -724,6 +724,11 @@
                 transform: scale(0.92) translateZ(0); 
             }
         }
+        .cooperation { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin: -12px 0 24px; font-size: 13px; }
+        .cooperation a { color: var(--accent); text-decoration: none; }
+        .cooperation button { background: transparent; border: 1px solid var(--border-color); border-radius: 4px; padding: 6px 10px; color: var(--text-muted); cursor: pointer; }
+        .cover-retry { position: absolute; inset: 35% 10%; z-index: 3; border: 1px solid var(--border-color); background: var(--card-dark); color: var(--text-main); cursor: pointer; }
+        .snapshot-card { opacity: 1; transform: none; }
     </style>
     <script src="/_vercel/insights/script.js" defer></script>
 </head>
@@ -780,15 +785,28 @@
                 <span data-zh>精选作品</span>
                 <span data-en>Selected Work</span>
             </div>
+            <div class="cooperation">
+                <a href="mailto:ZhaoWenke2014@qq.com"><span data-zh>项目合作 ↗</span><span data-en>Project inquiries ↗</span></a>
+                <button type="button" onclick="copyContactEmail()"><span data-zh>复制邮箱</span><span data-en>Copy email</span></button>
+                <span id="contact-status" role="status" aria-live="polite"></span>
+            </div>
             <div class="work-grid" id="gallery-grid">
-                <!-- 带有动效的等待加载提示 -->
-                <div class="loading-container">
-                    <div class="spinner"></div>
-                    <div class="loading-text">
-                        <span data-zh>在渲染了，莫催莫催~</span>
-                        <span data-en>Rendering, don't rush me~</span>
-                    </div>
-                </div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/renwenchengdu.webp" alt="C4D自制【人文成都】片头" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">C4D自制【人文成都】片头</div><div class="action-buttons"><a class="action-btn" href="https://www.bilibili.com/video/BV1ik4y1E7n3" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=X3q4xH5lxtQ" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/元旦上成都.webp" alt="非遗蛋壳雕绘-元旦上成都" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">非遗蛋壳雕绘-元旦上成都</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339164?from=UserProfile&amp;ws_referrer_origin=https%3A%2F%2Fwww.xinpianchang.com%2Fu12960270" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/在成都遇见未来致敬世界科幻大会.webp" alt="【AIGC】在成都遇见未来——致敬世界科幻大会" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">【AIGC】在成都遇见未来——致敬世界科幻大会</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a12763993?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/世运会倒计时365天.webp" alt="成都世运会倒计时365天" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">成都世运会倒计时365天</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339630?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/成都世运会倒计时600天.webp" alt="成都世运会倒计时600天" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">成都世运会倒计时600天</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339625?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/乒乓球名场面之十二大板复古像素游戏风.webp" alt="乒乓球名场面之十二大板-复古像素游戏风" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">乒乓球名场面之十二大板-复古像素游戏风</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339588?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/春天里.webp" alt="春天里" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">春天里</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339515?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/什么是北宋顶流.webp" alt="什么是北宋顶流——东坡先生的“中式浪漫”" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">什么是北宋顶流——东坡先生的“中式浪漫”</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13340587?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/成都世乒赛团体赛创意短片.webp" alt="成都世乒赛团体赛创意短片" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">成都世乒赛团体赛创意短片</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339202?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/穿梭Transocks.webp" alt="穿梭APP-Transocks" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">穿梭APP-Transocks</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13340570?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/金融城双子塔上塔视频成都大运会推广活动.webp" alt="金融城双子塔上塔视频（最后没上成）-成都大运会推广活动" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">金融城双子塔上塔视频（最后没上成）-成都大运会推广活动</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339606?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/成都世运会会徽设计原理揭秘.webp" alt="成都世运会会徽设计原理揭秘" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">成都世运会会徽设计原理揭秘</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339502?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/国际蓉涉外礼仪指南.webp" alt="国际蓉涉外礼仪指南" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">国际蓉涉外礼仪指南</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339172?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/探新长三角借力大湾区.webp" alt="探新长三角 借力大湾区" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">探新长三角 借力大湾区</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339159?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/科幻大会一周年从郫都到世界从2023到未来.webp" alt="科幻大会一周年-从郫都到世界 从2023到未来" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">科幻大会一周年-从郫都到世界 从2023到未来</div><div class="action-buttons"><a class="action-btn" href="https://www.xinpianchang.com/a13339154?from=UserProfile" target="_blank" rel="noopener">▶</a></div></div></div>
+<div class="grid-item cover-loaded snapshot-card"><img src="/showreel.webp" alt="Wenke&#x27;s Showreel 2022" loading="lazy" class="item-visual img-loaded"><div class="item-overlay"><div class="overlay-title">Wenke&#x27;s Showreel 2022</div><div class="action-buttons"><a class="action-btn" href="https://www.bilibili.com/video/BV1B5411D79u" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=kuk5SWuJUPs" target="_blank" rel="noopener">▶</a></div></div></div>
             </div>
         </div>
 
@@ -798,14 +816,24 @@
                 <span data-en>Tutorials & Breakdowns</span>
             </div>
             <div class="tutorial-grid" id="tutorial-grid">
-                <!-- 全新：带有个性化俏皮文案的加载动画 -->
-                <div class="loading-container">
-                    <div class="spinner"></div>
-                    <div class="loading-text">
-                        <span data-zh>在渲染了，莫催莫催~</span>
-                        <span data-en>Rendering, don't rush me~</span>
-                    </div>
-                </div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/jianzhushengzhang.webp" alt="如何用 C4D 制作建筑的生长动画" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1Jo4y1J7qa" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=ZzspmPR1fuM" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用 C4D 制作建筑的生长动画</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用OC渲染青铜器材质.webp" alt="如何用OC渲染青铜器材质" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV16P4y1B7qz" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=552KEnA-cwc" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用OC渲染青铜器材质</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用C4D制作一段卷纸动画.webp" alt="如何用C4D制作一段卷纸动画?" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1614y1n76U" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=PS6ZRZz9sYQ" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用C4D制作一段卷纸动画?</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何购买安装OC渲染器.webp" alt="如何购买安装OC渲染器" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1tv4y1d7MU" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=7dzzx8lruas" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何购买安装OC渲染器</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何创建酷炫的粒子线条Dribbble球.webp" alt="如何创建酷炫的粒子线条Dribbble球" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1EJ411K7Go" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=fCKX-zDcUKc" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何创建酷炫的粒子线条Dribbble球</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/用AE表达式制作伸缩自如的字幕条.webp" alt="如何用AE表达式制作伸缩自如的字幕条" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1et411p7Yr" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=cdEMNby8KKA" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用AE表达式制作伸缩自如的字幕条</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何制作具有科技感的HUD显示屏跟踪效果.webp" alt="如何制作具有科技感的HUD显示屏跟踪效果" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV184411q7Xb" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=S2nOoj450aU" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何制作具有科技感的HUD显示屏跟踪效果</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/ae制作iphone的轮播复古界面.webp" alt="还记得Apple Music 的轮播复古界面吗？我用AE复原了它" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1sQ4y1K7VG" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=bkvxiaR5-Mk" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">还记得Apple Music 的轮播复古界面吗？我用AE复原了它</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用AE表达式制作嘴型控制.webp" alt="如何用AE表达式制作嘴型控制，自动匹配音频" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1bA411q7dU" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=2m3B76Ya2cw" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用AE表达式制作嘴型控制，自动匹配音频</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用C4D制作一个动态的破碎心飞溅玻璃碴的效果.webp" alt="如何用C4D制作一个动态的破碎心+飞溅玻璃碴的效果" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV17F411B7bp" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=HronO_zqiTY" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用C4D制作一个动态的破碎心+飞溅玻璃碴的效果</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用AE制作Mac窗口缩放时的神奇效果.webp" alt="如何用AE制作Mac窗口缩放时的神奇效果？" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV14i4y1o7UK" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=NCpqRr5QFhs" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用AE制作Mac窗口缩放时的神奇效果？</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/鹤鸣茶社c4d建模.webp" alt="鹤鸣茶社c4d建模" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1GD4y1E7Ws" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=IBDkp6lDZg0" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">鹤鸣茶社c4d建模</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/C4D川剧舞台建模.webp" alt="C4D川剧舞台建模（速览）" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1614y1P7fs" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=v_8o9Dyj9Ww" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">C4D川剧舞台建模（速览）</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/弥留之国的爱丽丝.webp" alt="C4D制作《弥留之国的爱丽丝》壁纸 Alice in Borderland (今際の国のアリス)" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV17P4y1y7zH" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=KWNoqFkANUI" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">C4D制作《弥留之国的爱丽丝》壁纸 Alice in Borderland (今際の国のアリス)</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/如何用C4D与AE结合制作科技感线条.webp" alt="如何用C4D与AE结合制作科技感线条" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1iM4y1S7rR" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=slrxo6iyXQs" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用C4D与AE结合制作科技感线条</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/bizhendediqiu.webp" alt="C4D制作逼真的地球（速览）" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1Dj411A7V8" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=_c86YmEjQDk" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">C4D制作逼真的地球（速览）</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/tubiaoshengzhang.webp" alt="如何用C4D制作图标MG动画" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV1zs4y177pj" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=7NyMtvpBxAA" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">如何用C4D制作图标MG动画</h3></div></div>
+<div class="tutorial-card snapshot-card"><div class="tutorial-thumb-container cover-loaded"><img src="/tuilayaoyi.webp" alt="推拉摇移，AE里如何制作流畅的摄像机运镜" loading="lazy" class="tutorial-thumb img-loaded"><div class="tutorial-hover-overlay"><a class="action-btn" href="https://www.bilibili.com/video/BV13Z421M7Kq" target="_blank" rel="noopener">▶</a><a class="action-btn" href="https://www.youtube.com/watch?v=lYwZou-Jy-A" target="_blank" rel="noopener">▶</a></div></div><div class="tutorial-info"><h3 class="tutorial-title">推拉摇移，AE里如何制作流畅的摄像机运镜</h3></div></div>
             </div>
         </div>
 
@@ -1255,6 +1283,7 @@
         </div>
     </div>
 
+    <script id="project-snapshot" type="application/json">[{"id": "3244a50f-5af1-8005-9586-cf341a5656f7", "title": "C4D自制【人文成都】片头", "tags": "MOTION / C4D & MG", "bvid": "BV1ik4y1E7n3,https://www.youtube.com/watch?v=X3q4xH5lxtQ", "coverUrl": "https://www.keycg.cn/renwenchengdu.jpg"}, {"id": "3244a50f-5af1-80ff-ba67-f0d7f7383d72", "title": "非遗蛋壳雕绘-元旦上成都", "tags": "MOTION / C4D & MG", "bvid": "https://www.xinpianchang.com/a13339164?from=UserProfile&ws_referrer_origin=https%3A%2F%2Fwww.xinpianchang.com%2Fu12960270", "coverUrl": "https://www.keycg.cn/元旦上成都.jpg"}, {"id": "3244a50f-5af1-803b-ba8b-ec1ec5f59449", "title": "【AIGC】在成都遇见未来——致敬世界科幻大会", "tags": "MOTION / C4D & MG", "bvid": "https://www.xinpianchang.com/a12763993?from=UserProfile", "coverUrl": "https://www.keycg.cn/在成都遇见未来致敬世界科幻大会.jpg"}, {"id": "3244a50f-5af1-804b-ad50-d94a099eea62", "title": "成都世运会倒计时365天", "tags": "MOTION / C4D & MG", "bvid": "https://www.xinpianchang.com/a13339630?from=UserProfile", "coverUrl": "https://www.keycg.cn/世运会倒计时365天.jpg"}, {"id": "3244a50f-5af1-806c-bf16-eb2b7047755c", "title": "成都世运会倒计时600天", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339625?from=UserProfile", "coverUrl": "https://www.keycg.cn/成都世运会倒计时600天.jpg"}, {"id": "3244a50f-5af1-8005-88d1-ca4a09b47dd5", "title": "乒乓球名场面之十二大板-复古像素游戏风", "tags": "MOTION / C4D & MG", "bvid": "https://www.xinpianchang.com/a13339588?from=UserProfile", "coverUrl": "https://www.keycg.cn/乒乓球名场面之十二大板复古像素游戏风.jpg"}, {"id": "3244a50f-5af1-8005-b338-fa1181a9f8bf", "title": "春天里", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339515?from=UserProfile", "coverUrl": "https://www.keycg.cn/春天里.jpg"}, {"id": "3244a50f-5af1-80e4-aa56-ee49c73061f9", "title": "什么是北宋顶流——东坡先生的“中式浪漫”", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13340587?from=UserProfile", "coverUrl": "https://www.keycg.cn/什么是北宋顶流.jpg"}, {"id": "3244a50f-5af1-80f8-89e0-e81a2e392444", "title": "成都世乒赛团体赛创意短片", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339202?from=UserProfile", "coverUrl": "https://www.keycg.cn/成都世乒赛团体赛创意短片.jpg"}, {"id": "3244a50f-5af1-80a6-939e-c44b2e941a55", "title": "穿梭APP-Transocks", "tags": "AE", "bvid": "https://www.xinpianchang.com/a13340570?from=UserProfile", "coverUrl": "https://www.keycg.cn/穿梭Transocks.jpg"}, {"id": "3244a50f-5af1-80be-9013-e1e5760dbc2b", "title": "如何用 C4D 制作建筑的生长动画", "tags": "教程Tutorial", "bvid": "BV1Jo4y1J7qa,https://www.youtube.com/watch?v=ZzspmPR1fuM", "coverUrl": "https://www.keycg.cn/jianzhushengzhang.jpg"}, {"id": "3244a50f-5af1-802c-a2da-d504aef2b051", "title": "如何用OC渲染青铜器材质", "tags": "教程Tutorial", "bvid": "BV16P4y1B7qz,https://www.youtube.com/watch?v=552KEnA-cwc", "coverUrl": "https://www.keycg.cn/如何用OC渲染青铜器材质.jpg"}, {"id": "3244a50f-5af1-8052-9a04-c3ca2c3c57c6", "title": "如何用C4D制作一段卷纸动画?", "tags": "教程Tutorial", "bvid": "BV1614y1n76U,https://www.youtube.com/watch?v=PS6ZRZz9sYQ", "coverUrl": "https://www.keycg.cn/如何用C4D制作一段卷纸动画.jpg"}, {"id": "3244a50f-5af1-8000-ae0f-d0e87f2bfca0", "title": "金融城双子塔上塔视频（最后没上成）-成都大运会推广活动", "tags": "MOTION / C4D & MG", "bvid": "https://www.xinpianchang.com/a13339606?from=UserProfile", "coverUrl": "https://www.keycg.cn/金融城双子塔上塔视频成都大运会推广活动.png"}, {"id": "3244a50f-5af1-805b-aba3-daadf695020d", "title": "成都世运会会徽设计原理揭秘", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339502?from=UserProfile", "coverUrl": "https://www.keycg.cn/成都世运会会徽设计原理揭秘.jpg"}, {"id": "3244a50f-5af1-805a-8c9f-d93bcaee0a02", "title": "国际蓉涉外礼仪指南", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339172?from=UserProfile", "coverUrl": "https://www.keycg.cn/国际蓉涉外礼仪指南.jpg"}, {"id": "3244a50f-5af1-80a3-b739-d1fd5d15df40", "title": "探新长三角 借力大湾区", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339159?from=UserProfile", "coverUrl": "https://www.keycg.cn/探新长三角借力大湾区.jpg"}, {"id": "3244a50f-5af1-8036-9f4d-df2a05fe93dd", "title": "科幻大会一周年-从郫都到世界 从2023到未来", "tags": "宣传片", "bvid": "https://www.xinpianchang.com/a13339154?from=UserProfile", "coverUrl": "https://www.keycg.cn/科幻大会一周年从郫都到世界从2023到未来.jpg"}, {"id": "3244a50f-5af1-80ea-b71b-d9a775f2fe93", "title": "如何购买安装OC渲染器", "tags": "教程Tutorial", "bvid": "BV1tv4y1d7MU,https://www.youtube.com/watch?v=7dzzx8lruas", "coverUrl": "https://www.keycg.cn/如何购买安装OC渲染器.jpg"}, {"id": "3244a50f-5af1-801f-9fd5-e918f35c0807", "title": "如何创建酷炫的粒子线条Dribbble球", "tags": "教程Tutorial", "bvid": "BV1EJ411K7Go,https://www.youtube.com/watch?v=fCKX-zDcUKc", "coverUrl": "https://www.keycg.cn/如何创建酷炫的粒子线条Dribbble球.jpg"}, {"id": "3244a50f-5af1-803a-8b51-eff91225382c", "title": "Wenke's Showreel 2022", "tags": "MOTION / C4D & MG", "bvid": "BV1B5411D79u,https://www.youtube.com/watch?v=kuk5SWuJUPs", "coverUrl": "https://www.keycg.cn/showreel.jpg"}, {"id": "3244a50f-5af1-8018-a6a2-c264d733acfd", "title": "如何用AE表达式制作伸缩自如的字幕条", "tags": "教程Tutorial", "bvid": "BV1et411p7Yr,https://www.youtube.com/watch?v=cdEMNby8KKA", "coverUrl": "https://www.keycg.cn/用AE表达式制作伸缩自如的字幕条.jpg"}, {"id": "3244a50f-5af1-8020-9d36-cd3ac4b54b1c", "title": "如何制作具有科技感的HUD显示屏跟踪效果", "tags": "教程Tutorial", "bvid": "BV184411q7Xb,https://www.youtube.com/watch?v=S2nOoj450aU", "coverUrl": "https://www.keycg.cn/如何制作具有科技感的HUD显示屏跟踪效果.jpg"}, {"id": "3244a50f-5af1-8059-8c2b-cbb18eb1d70e", "title": "还记得Apple Music 的轮播复古界面吗？我用AE复原了它", "tags": "教程Tutorial", "bvid": "BV1sQ4y1K7VG,https://www.youtube.com/watch?v=bkvxiaR5-Mk", "coverUrl": "https://www.keycg.cn/ae制作iphone的轮播复古界面.jpg"}, {"id": "3244a50f-5af1-8072-aa0f-ccebad70d4b6", "title": "如何用AE表达式制作嘴型控制，自动匹配音频", "tags": "教程Tutorial", "bvid": "BV1bA411q7dU,https://www.youtube.com/watch?v=2m3B76Ya2cw", "coverUrl": "https://www.keycg.cn/如何用AE表达式制作嘴型控制.jpg"}, {"id": "3244a50f-5af1-8049-8607-da5b96eb9419", "title": "如何用C4D制作一个动态的破碎心+飞溅玻璃碴的效果", "tags": "教程Tutorial", "bvid": "BV17F411B7bp,https://www.youtube.com/watch?v=HronO_zqiTY", "coverUrl": "https://www.keycg.cn/如何用C4D制作一个动态的破碎心飞溅玻璃碴的效果.jpg"}, {"id": "3244a50f-5af1-80e8-9ca8-efafd49f0095", "title": "如何用AE制作Mac窗口缩放时的神奇效果？", "tags": "教程Tutorial", "bvid": "BV14i4y1o7UK,https://www.youtube.com/watch?v=NCpqRr5QFhs", "coverUrl": "https://www.keycg.cn/如何用AE制作Mac窗口缩放时的神奇效果.jpg"}, {"id": "3244a50f-5af1-80fd-811f-d5a07616c4dc", "title": "鹤鸣茶社c4d建模", "tags": "教程Tutorial", "bvid": "BV1GD4y1E7Ws,https://www.youtube.com/watch?v=IBDkp6lDZg0", "coverUrl": "https://www.keycg.cn/鹤鸣茶社c4d建模.jpg"}, {"id": "3244a50f-5af1-807d-9d8b-de6c6f796026", "title": "C4D川剧舞台建模（速览）", "tags": "教程Tutorial", "bvid": "BV1614y1P7fs,https://www.youtube.com/watch?v=v_8o9Dyj9Ww", "coverUrl": "https://www.keycg.cn/C4D川剧舞台建模.jpg"}, {"id": "3244a50f-5af1-8087-b13f-cb158ccd9126", "title": "C4D制作《弥留之国的爱丽丝》壁纸 Alice in Borderland (今際の国のアリス)", "tags": "教程Tutorial", "bvid": "BV17P4y1y7zH,https://www.youtube.com/watch?v=KWNoqFkANUI", "coverUrl": "https://www.keycg.cn/弥留之国的爱丽丝.png"}, {"id": "3244a50f-5af1-808c-8c62-de051f2d7a1e", "title": "如何用C4D与AE结合制作科技感线条", "tags": "教程Tutorial", "bvid": "BV1iM4y1S7rR,https://www.youtube.com/watch?v=slrxo6iyXQs", "coverUrl": "https://www.keycg.cn/如何用C4D与AE结合制作科技感线条.jpg"}, {"id": "3244a50f-5af1-8013-bafc-ea496d6f73fc", "title": "C4D制作逼真的地球（速览）", "tags": "教程Tutorial", "bvid": "BV1Dj411A7V8,https://www.youtube.com/watch?v=_c86YmEjQDk", "coverUrl": "https://www.keycg.cn/bizhendediqiu.jpg"}, {"id": "3244a50f-5af1-80d3-bc1f-c6a6913ec8a1", "title": "如何用C4D制作图标MG动画", "tags": "教程Tutorial", "bvid": "BV1zs4y177pj,https://www.youtube.com/watch?v=7NyMtvpBxAA", "coverUrl": "https://www.keycg.cn/tubiaoshengzhang.jpg"}, {"id": "3234a50f-5af1-8063-87f1-c609b6373798", "title": "推拉摇移，AE里如何制作流畅的摄像机运镜", "tags": "教程Tutorial", "bvid": "BV13Z421M7Kq,https://www.youtube.com/watch?v=lYwZou-Jy-A", "coverUrl": "https://www.keycg.cn/tuilayaoyi.jpg"}]</script>
     <script>
         // --- 昼夜模式智能同步逻辑 ---
         let isLightMode = false;
@@ -1291,6 +1320,7 @@
         };
         const languagePacks = {};
         let currentLanguage = 'zh';
+        let languageRequest = 0;
 
         function toggleLanguageMenu() {
             const menu = document.getElementById('language-menu');
@@ -1324,7 +1354,7 @@
 
         async function loadLanguagePack(language) {
             if (language === 'zh' || languagePacks[language]) return languagePacks[language] || {};
-            const response = await fetch(`/i18n/${language}.json`);
+            const response = await fetch(`/i18n/${language}.json?v=20260915-2`, { signal: AbortSignal.timeout(12000) });
             if (!response.ok) throw new Error(`Language pack ${language} failed to load`);
             languagePacks[language] = await response.json();
             return languagePacks[language];
@@ -1353,16 +1383,18 @@
 
         async function selectLanguage(language, options = {}) {
             if (!languageConfig[language]) language = 'zh';
-            currentLanguage = language;
-            document.body.classList.toggle('lang-zh', language === 'zh');
-            document.documentElement.lang = languageConfig[language].htmlLang;
+            const request = ++languageRequest;
 
             try {
                 await loadLanguagePack(language);
             } catch (error) {
-                console.warn('Language pack unavailable; using English fallback:', error);
+                console.warn('Language pack unavailable; keeping current language:', error);
+                return;
             }
-
+            if (request !== languageRequest) return;
+            currentLanguage = language;
+            document.body.classList.toggle('lang-zh', language === 'zh');
+            document.documentElement.lang = languageConfig[language].htmlLang;
             applyTranslations();
             document.title = languageConfig[language].title;
             const button = document.getElementById('language-button');
@@ -1385,6 +1417,17 @@
                     }
                 }
             }, 50);
+        }
+
+        async function copyContactEmail() {
+            const status = document.getElementById('contact-status');
+            try {
+                await navigator.clipboard.writeText('ZhaoWenke2014@qq.com');
+                status.innerHTML = '<span data-zh>邮箱已复制</span><span data-en>Email copied</span>';
+            } catch (_) {
+                status.textContent = 'ZhaoWenke2014@qq.com';
+            }
+            applyTranslations(status);
         }
 
         function updateIndicator(tabElement) {
@@ -1427,24 +1470,75 @@
         function markCoverLoaded(image) {
             image.classList.add('img-loaded');
             const coverContainer = image.closest('.grid-item, .tutorial-thumb-container');
-            if (coverContainer) coverContainer.classList.add('cover-loaded');
+            if (coverContainer) {
+                coverContainer.classList.add('cover-loaded');
+                coverContainer.querySelector('.cover-retry')?.remove();
+            }
         }
 
         function runDeferredImageQueue() {
-            while (activeDeferredImageLoads < 2 && deferredImageQueue.length) {
+            deferredImageQueue.sort((a, b) => {
+                const score = image => {
+                    const rect = image.getBoundingClientRect();
+                    return rect.width && rect.bottom > 0 && rect.top < innerHeight ? 0 : 1;
+                };
+                return score(a) - score(b);
+            });
+            while (activeDeferredImageLoads < 4 && deferredImageQueue.length) {
                 const image = deferredImageQueue.shift();
                 const source = image.dataset.src;
-                if (!source) continue;
+                if (!source || !image.isConnected) continue;
                 activeDeferredImageLoads++;
                 image.removeAttribute('data-src');
-                const finished = () => {
+                let settled = false;
+                const finished = success => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    image.removeEventListener('load', loaded);
+                    image.removeEventListener('error', failed);
                     activeDeferredImageLoads--;
+                    delete image.dataset.queued;
+                    if (success) markCoverLoaded(image);
+                    else {
+                        image.removeAttribute('src');
+                        const attempts = Number(image.dataset.attempts || 0) + 1;
+                        image.dataset.attempts = attempts;
+                        image.dataset.src = source;
+                        if (attempts < 2) setTimeout(() => queueDeferredImage(image), 500);
+                        else showCoverRetry(image);
+                    }
                     runDeferredImageQueue();
                 };
-                image.addEventListener('load', finished, { once: true });
-                image.addEventListener('error', finished, { once: true });
-                image.src = source;
+                const loaded = () => finished(true);
+                const failed = () => finished(false);
+                const timer = setTimeout(failed, 10000);
+                image.addEventListener('load', loaded);
+                image.addEventListener('error', failed);
+                const requestNumber = Number(image.dataset.requestNumber || 0);
+                image.dataset.requestNumber = requestNumber + 1;
+                const requestUrl = new URL(source, location.href);
+                if (requestNumber && requestUrl.protocol.startsWith('http')) requestUrl.searchParams.set('cover-retry', String(requestNumber));
+                image.src = requestUrl.href;
             }
+        }
+
+        function showCoverRetry(image) {
+            const container = image.parentElement;
+            if (!container || container.querySelector('.cover-retry')) return;
+            container.classList.add('cover-loaded');
+            const button = document.createElement('button');
+            button.className = 'cover-retry';
+            button.innerHTML = '<span data-zh>图片加载失败 · 点击重试</span><span data-en>Image unavailable · Retry</span>';
+            button.onclick = event => {
+                event.stopPropagation();
+                button.remove();
+                container.classList.remove('cover-loaded');
+                image.dataset.attempts = '0';
+                queueDeferredImage(image);
+            };
+            container.append(button);
+            applyTranslations(container);
         }
 
         function queueDeferredImage(image) {
@@ -1480,48 +1574,14 @@
             const isLocalPreview = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             const apiUrl = '/api/notion';
 
-            try {
-                if (!providedProjects) {
-                    const cached = localStorage.getItem('keycgProjectsCacheV2');
-                    if (cached) {
-                        projects = JSON.parse(cached).projects || [];
-                        fetch(apiUrl).then(async res => {
-                            if (!res.ok) return;
-                            const freshProjects = await res.json();
-                            localStorage.setItem('keycgProjectsCacheV2', JSON.stringify({ projects: freshProjects, savedAt: Date.now() }));
-                            if (JSON.stringify(freshProjects) !== JSON.stringify(projects)) loadNotionProjects(freshProjects);
-                        }).catch(() => {});
-                    } else {
-                        const res = await fetch(apiUrl);
-                        if (!res.ok) throw new Error('API Request Failed');
-                        projects = await res.json();
-                        localStorage.setItem('keycgProjectsCacheV2', JSON.stringify({ projects, savedAt: Date.now() }));
-                    }
-                }
-            } catch (error) {
-                console.warn('跨域或网络请求失败，若是预览环境属于正常现象：', error);
-                if (isLocalPreview) {
-                    // 非正式环境遇到错误时，加载演示数据以供预览
-                    projects = [
-                        {
-                            title: "C4D自制【人文成都】片头 | Motion Design",
-                            coverUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-                            bvid: "https://www.bilibili.com/video/BV1xx411c7mD",
-                            tags: "MOTION / C4D & MG"
-                        },
-                        {
-                            title: "如何用C4D制作建筑生长动画 | C4D Tutorial",
-                            coverUrl: "https://images.unsplash.com/photo-1614729939124-032f0b56c9ce?q=80&w=800&auto=format&fit=crop",
-                            bvid: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                            tags: "TUTORIAL"
-                        }
-                    ];
-                } else {
-                    // 正式环境遇到错误，显示提示信息
-                    workGrid.innerHTML = '<div style="color: #ff5f56; padding: 20px; grid-column: 1 / -1; text-align: center;"><span data-zh>读取数据库失败，请检查正式环境下的 Vercel 配置。</span><span data-en>Failed to load database, please check Vercel config.</span></div>';
-                    tutorialGrid.innerHTML = '';
-                    return;
-                }
+            if (!providedProjects) {
+                projects = JSON.parse(document.getElementById('project-snapshot').textContent);
+                fetch(apiUrl, { signal: AbortSignal.timeout(12000) }).then(async response => {
+                    if (!response.ok) return;
+                    const fresh = await response.json();
+                    if (!Array.isArray(fresh) || !fresh.length) return;
+                    if (JSON.stringify(fresh) !== JSON.stringify(projects)) loadNotionProjects(fresh);
+                }).catch(() => {});
             }
 
             workGrid.innerHTML = ''; 
@@ -1612,7 +1672,7 @@
                     const cardHtml = `
                         <div class="tutorial-card">
                             <div class="tutorial-thumb-container">
-                                <img data-src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" decoding="async" onload="markCoverLoaded(this)" onerror="markCoverLoaded(this)">
+                                <img data-src="${displayCover}" alt="${titleZh}" class="tutorial-thumb" decoding="async" onload="markCoverLoaded(this)" >
                                 <div class="tutorial-hover-overlay">
                                     ${actionButtonsHtml}
                                 </div>
@@ -1625,10 +1685,10 @@
                     tutorialGrid.insertAdjacentHTML('beforeend', cardHtml);
                 } else {
                     workCount++;
-                    const imageSource = workCount === 1 ? `src="${displayCover}"` : `data-src="${displayCover}"`;
+                    const imageSource = `data-src="${displayCover}"`;
                     const cardHtml = `
                         <div class="grid-item">
-                            <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="markCoverLoaded(this)" onerror="markCoverLoaded(this)">
+                            <img ${imageSource} alt="${titleZh}" class="item-visual" fetchpriority="${workCount === 1 ? 'high' : 'auto'}" decoding="async" onload="markCoverLoaded(this)" >
                             <div class="item-overlay">
                                 <div class="overlay-title">${displayTitleHtml}</div>
                                 <div class="overlay-tags" data-i18n-text>${project.tags}</div>
